@@ -4,8 +4,9 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{txfonts}
+\usepackage{url}
 
-\usepackage[polish]{babel}
+%\usepackage[polish]{babel}
 
 \renewcommand{\chaptername}{Chapter}
 \renewcommand{\contentsname}{Table of contents}
@@ -15,7 +16,7 @@
 \renewcommand{\listtablename}{List of tables}
 \renewcommand{\bibname}{Bibliography}
 
-% \pagestyle{headings}
+\pagestyle{headings}
 
 \setlength{\textwidth}{14cm}
 \setlength{\textheight}{20cm}
@@ -29,33 +30,58 @@
 \begin{document}
 \tableofcontents	% generuje spis treści ze stronami !!!
 
+%\indent - wymuszony odstep
+%\bf - pogrubienie
+
 \chapter{Introduction} \label{rozdz.wstep} 
-% {\em Praca MUSI stanowić samodzielne opracowanie przez dyplomanta WYBRANEGO TE\-MATU
-% BADAWCZEGO pod kierunkiem promotora. 
-% Temat i zakres pracy powinien wiązać się ze specjalnością, na której studiuje
-% dyplomant.\\
-% \indent Orientacyjna objętość pracy inżynierskiej/licencjackiej (I-go stopnia)
-% to 50-80 stron, zaś pracy magisterskiej (II-go stopnia) -- 70-120 stron.}
+In the age of ubiquitous Internet access more and more human activities take place in the Web. E-commerce, the act of shopping online, has been on the increase for many years. [{\bf tutaj jakies statystyki, dane nt udzialu ecommerce w ogolnej sprzedazy}]
+
+The amount of products offered on the Internet can be overwhelming for an average consumer, therefore companies take efforts to properly target users with relevant content. Correct product targeting directly translates to increased sales. [{\bf jakis reference}] Systems responsible for this are {\bf recommender systems}.
+
+In the last several years the world has witnessed the rise of social media - Internet-based applications enabling users to connect with each other and share various content. The principal services include Facebook, Twitter and LinkedIn. This phenomenon enabled large-scale user information gathering. That information can be shared with third parties (with user consent) and can be used by them to improve user experience. [{\bf doszlifowac}]
+
+The use of social media in e-commerce is commonly referred to as {\bf social commerce}. According to Lora Cecere of Altimeter Group \cite{rise_of_social_commerce}, "Social Commerce is the use of Social Technologies to connect, listen, understand and engage to improve the shopping experience."
+
+% The aim of this thesis is to create a recommender system that leverages user social media information to suggest products. The implementation will be a demo web e-commerce store.[{\bf rozwinac?}]
+
+
+% Tutaj ogólnie w skrócie o wzroście znaczenia ecommerce, social commerce etc.
+% Coraj więcej produktów, czasem trudno się w tym odnaleźć.
+% Rekomendacje dobre zarówno dla klientów (szybciej mogą znaleźć to, czego potrzebują), jak i dla sklepów (większe zyski).
 
 \section{Scope of work}
-Niniejsza praca dotyczy zakresu (inżynierii oprogramowania/sieci
-komputero\-wych/gra\-fiki komputerowej/sztucznej inteligencji/algorytmów ewolucyjnych/technologii baz danych). ....\\
-\indent Głównym przedmiotem/celem pracy jest
-stworzenie/opracowanie/przeanalizo\-wanie/zaprojektowanie.... {\bf ten fragment
-pracy zawierać musi wyraźne określenie problemu badawczego oraz jego pogłębioną
-analizę}\\
+The thesis involves the areas of software engineering, web development, systems integration and recommender systems.
 
-\indent Dlaczego podejmowanie tej tematyki jest potrzebne? Czy są inne
-rozwiązania tego problemu/tych problemów? Jakie? czy są lepsze/gorsze,
-tańsze/droższe, itp.
-\indent Przed jakimi wyzwaniami stoi osoba podejmująca tematykę? \\
-\indent {\bf Określić spodziewane efekty pracy:} W wyniku doświadczeń przeprowadzonych w zakresie pracy polepszeniu
-uległo.... podać konkretne wskaźniki rezultaty, jak np. przyspieszenie obliczeń,
-redukcja kosztu, nowe oprogramowanie itp. w złotówkach, sekundach, procentach,
-roboczogodzinach itp. 
+The aim of this thesis is to design and create a recommender system that leverages users' social media information to suggest products. 
 
-{\bf (razem max. 3 strony - strona przeliczeniowa = 1800 znaków, średnio 30
-wierszy po 60 znaków)}
+While there exist many recommender systems, most of them require initial information about user preferences regarding some part of data that the later recommended items come from. For example, if a user is to be recommended a movie to watch, the system needs either a history of movies the user has seen, his ratings on multiple movies etc. [{\bf dopracowac}] Next, this information can be processed in two ways:
+\begin{itemize}
+\item collaborative filtering - based on item ratings, other users with similar tastes are found and items they like are proposed
+\item content-based filtering - based on item ratings, items similar to the highest ranked items are found and proposed
+\end{itemize}
+
+
+
+Są już systemy rekomendacyjne, ale cierpią na 2 główne problemy: cold start i data sparsity. 
+Wykorzystanie grafowej bazy danych, dobrze modelującej relacje społeczne.
+
+Osoba podejmująca tematykę stoi przed wyzwaniami: zbudować rzetelną bazę produktów, bazę użytkowników, przekonać użytkowników do udostępnienia danych osobowych etc.
+
+Spodziewane efekty:\\
+- rzetelne rekomendacje tuż po zalogowaniu użytkownika\\
+- ...\\
+
+% Dlaczego podejmowanie tej tematyki jest potrzebne? Czy są inne
+% rozwiązania tego problemu/tych problemów? Jakie? czy są lepsze/gorsze,
+% tańsze/droższe, itp.
+% \indent Przed jakimi wyzwaniami stoi osoba podejmująca tematykę? \\
+% \indent {\bf Określić spodziewane efekty pracy:} W wyniku doświadczeń przeprowadzonych w zakresie pracy polepszeniu
+% uległo.... podać konkretne wskaźniki rezultaty, jak np. przyspieszenie obliczeń,
+% redukcja kosztu, nowe oprogramowanie itp. w złotówkach, sekundach, procentach,
+% roboczogodzinach itp. 
+
+% {\bf (razem max. 3 strony - strona przeliczeniowa = 1800 znaków, średnio 30
+% wierszy po 60 znaków)}
 
 \section{Objectives}
 Wymienić w punktach cele pracy, rozpoczynając od celów poznawczych (dotyczą\-cych
@@ -95,8 +121,13 @@ zastosowano, ewentualnie dlaczego zastosowano inne? \\
 WYMAGANE ODNOŚNIKI DO POZYCJI BILIOGRAFII.\\
 {\bf cały podrozdział ok. 1 strony przeliczeniowej czyli 1800 znaków}.
 
-
-
+\section{Literature overview} % ?? czy to będzie ?
+Rozszerzyć odpowiedni podpunkt z metody badawczej, np. wg podziału:
+\subsubsection{Źródła książkowe polskojęzyczne i tłumaczenia}
+\subsubsection{Źródła książkowe obcojęzyczne}
+\subsubsection{Artykuły naukowe, raporty z badań, komunikaty konferencyjne,
+dokumentacje techniczne, manuale, instrukcje}
+\subsubsection{Źródła elektroniczne}
 
 
 \section{Thesis plan}
@@ -113,36 +144,74 @@ CO TO JEST}. \\
 
 
 
-\chapter{Fundamental information on social commerce and recommendation algorithms} \label{etykietarozdzialu2}
-\section{Podstawowe definicje}
-Ten podrozdział powinien zawierać dokładny opis terminologii  pojęć zasadniczych dla tematu pracy, którymi autor będzie się posługiwał przy realizacji głównych celów pracy. 
+\chapter[Fundamental information on social...]{Fundamental information on social commerce and recommendation algorithms} \label{fundamental_info}
 
 
-\section{Istniejące rozwiązania w dziedzinie}
-W tym podrozdziale zostaną opisane.....
-\subsection{Sprzęt}
-.........................
-\subsection{Oprogramowanie i wdrożone systemy}
-.....................................
-\subsection{}
-...................
+% \section{Podstawowe definicje}
+% Ten podrozdział powinien zawierać dokładny opis terminologii  pojęć zasadniczych dla tematu pracy, którymi autor będzie się posługiwał przy realizacji głównych celów pracy. 
 
-\section{Wady i słabe punkty istniejących rozwiązań}
-\subsection{Efektywność}
-..........................
-\subsection{Utrudniony dostęp}
-..............
-\subsection{Wysokie koszty}
-...............................
+
+% \section{Istniejące rozwiązania w dziedzinie}
+% W tym podrozdziale zostaną opisane.....
+% \subsection{Sprzęt}
+% .........................
+% \subsection{Oprogramowanie i wdrożone systemy}
+% .....................................
+% \subsection{}
+% ...................
+
+% \section{Wady i słabe punkty istniejących rozwiązań}
+% \subsection{Efektywność}
+% ..........................
+% \subsection{Utrudniony dostęp}
+% ..............
+% \subsection{Wysokie koszty}
+% ...............................
 
 
 
 \chapter{Presentation of existing recommender systems}
 
+\section{A Social Network-Based Recommender System (SNRS)}
 
+
+% % %
 \chapter{Implementation of new functionalities}
+
+\section{Overview}
+\subsection{General idea}
+In order to implement and test the system I have decided to build a web application. It is a sample e-commerce store that will gather information about users from their social network. Additionally it will contain a list of exemplary products from different categories, which will be recommendable items. 
+
+The general idea was to implement the so-called "social login" - \cite{social_login} a feature enabling the user to log in to a third-party website using existing login information from a social networking service, without the need of creating a new login account specifically for that website. A website using this feature can request additional information from the user's profile, such as gender, location, list of friends, interests etc. 
+
+Thanks to this, a newly logged user would not be anonymous for my application. By requesting appropriate information from the social network I would be able to analyze user's data and compare them to other existing users in my database. As a result, it would be possible to calculate similarities between users, which is a crucial step in recommender systems.
+
+It is worth noting that the user similarity computation would occur before any interaction of the user with my application. This is a major difference as opposed to classical collaborative filtering approaches, where in order to find nearest neighbours (most similar users) users are compared in terms of their preferences towards recommendable items (e.g. ratings of movies). In my case only the information derived from social networks influences the similarity.
+
+As a consequence, the new approach enables serving recommendations to new users right after their login to the website. The only limiting factor is data downloading from the social network and computation time. Nevertheless, it is safe to assume that the result could be presented withing tens of seconds after the login step. Even if it is not instantaneous, in a typical use case the time needed for recommendation computation would allow the user to get familiar with the website's layout, functionalities etc. When the results would be ready, they could be asynchronously loaded onto the page. 
+
+The only prerequisite for such a situation is that there exists a reasonable user base of the service. Moreover, the system needs to both possess the users' social network information and to know their preferences towards the system's items. Therefore, in a typical scenario of implementation in an existing service, first the social login and social information acquisition would be enabled. After a period of gathering the preferences of socially-logged users, via their item ratings, shopping/browsing history, comment analysis etc., the initial user base would be established. In the second phase, each new user could obtain recommendations. Obviously, the system will improve over time, as more and more users with social data and product preferences are in the database.
+
+\subsection{Solution plan \textit{[?]}}
+
+The system implementation will be conducted in two stages.
+\begin{enumerate}
+\item Users will be able to log in to the website with their social network account. Next, they will be asked to complete a survey, in which they will rate products in the store's catalog according to their tastes. No recommendation will be offered at this point.
+\item Having the initial user base, any new user logging in with the social network will be presented with instant recommendations on products.
+\end{enumerate}
+
 \section{Web application and social login}
+\subsection{Design [ew. inna nazwa]}
+
+\subsection{Implementation}
+
+%
 \section{User data model in Neo4j}
+
+\subsection{Introduction to Graph Databases}
+
+\subsection{Data model}
+
 \section{Recommendation algorithm}
 
 \chapter{Evaluation}
@@ -175,8 +244,8 @@ komenda {\tt begin{thebibliography}}). Informacje o sposobie cytowania zawarte
 są na stronie Bibilioteki Głównej PŁ\\ także udostępnione na
 \underline{\tt http://ics.p.lodz.pl/\textasciitilde aniewiadomski}. \\
 
-\indent Przykład cytowania --  jak podaje praca \cite{kacprzyk86}, ......,
-jednakże autorzy [2] twierdzą, iż.....\\
+% \indent Przykład cytowania --  jak podaje praca \cite{kacprzyk86}, ......,
+% jednakże autorzy [2] twierdzą, iż.....\\
 
 
 \indent Za każdym razem, kiedy w pracy pojawia się treść na podstawie jakiegoś
@@ -333,7 +402,7 @@ klamrowych), która
 pokazuje sie na stronie rozpoczynającej rozdział, oraz krótką (w kodzie: w nawiasach
 kwadratowych), która pokazuje sie w spisie treści i w nagłówku}
 
-W rozdziale \ref{etykietarozdzialu2} podano podstawy teoretyczne i ogólny zakres
+W rozdziale \ref{fundamental_info} podano podstawy teoretyczne i ogólny zakres
 pracy. W niniejszym rozdziale opisana zostanie technologia XYZ oraz metoda ABC
 użyta w części praktycznej, patrz rozdział~\ref{rozdz.czesc.prakt}. 
 
@@ -433,12 +502,18 @@ zrobione lub ulepszone? Co należy zmienić lub poprawić w pracy z dzisiejszego
 
 \addcontentsline{toc}{chapter}{Bibliografia} 
 \begin{thebibliography}{99}
-\bibitem{kacprzyk86}
-Kacprzyk J. (1986) Fuzzy sets in system analysis.  PWN, Warsaw (in Polish).
-\bibitem{kacprzyk99b}
-Kacprzyk J., Strykowski P. (1999) Linguistic Data Summaries for Intelligent Decision Support, Proceedings of EFDAN'99. 4-th European Workshop on Fuzzy Decision Analysis and Recognition Technology for Management, Planning and Optimization, Dortmund, 1999, 3--12.
-\bibitem{kacprzyk01d}
-Kacprzyk J., Yager R. R. (2001) Linguistic summaries of data using fuzzy logic. International Journal of General Systems 30:133--154 
+% \bibitem{kacprzyk86}
+% Kacprzyk J. (1986) Fuzzy sets in system analysis.  PWN, Warsaw (in Polish).
+% \bibitem{kacprzyk99b}
+% Kacprzyk J., Strykowski P. (1999) Linguistic Data Summaries for Intelligent Decision Support, Proceedings of EFDAN'99. 4-th European Workshop on Fuzzy Decision Analysis and Recognition Technology for Management, Planning and Optimization, Dortmund, 1999, 3--12.
+% \bibitem{kacprzyk01d}
+% Kacprzyk J., Yager R. R. (2001) Linguistic summaries of data using fuzzy logic. International Journal of General Systems 30:133--154 
+\bibitem{rise_of_social_commerce}
+Lora Cecere. \textit{Rise of Social Commerce} [online]. Altimeter [access: 1 May 2015]. Accessible online: \url{http://www.riseofsocialcommerce.com/wp-content/uploads/2010/10/Lora_Cecere-Rise_of_Social_Commerce.pdf}
+\bibitem{snrs}
+Jianming He, Wesley W. Chu. \textit{A Social Network-Based Recommender System (SNRS)} [online]. Computer Science Department, University of California [access: 25 April 2015]. Accessible online: \url{http://www.cobase.cs.ucla.edu/tech-docs/jmhek/snrs.pdf}
+\bibitem{social_login}
+Loren McDonald. \textit{Social Login: A Data Capture Game Changer} [online]. Silverpop blog (An IBM Company), 29 November 2011 [access: 28 August 2015]. Accessible online: \url{http://www.silverpop.com/blogs/email-marketing/social-login-data-capture.html}
 
 \end{thebibliography}
 
@@ -459,3 +534,4 @@ Kacprzyk J., Yager R. R. (2001) Linguistic summaries of data using fuzzy logic. 
 
 
 \end{document}
+
