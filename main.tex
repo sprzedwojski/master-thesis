@@ -210,13 +210,13 @@ The front-end of the website uses the typical web technology stack: HTML / CSS /
 
 The connection with Facebook was realized with the help of RestFB - a simple Facebook Graph API written in Java \cite{restfb}.
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=7cm]{spring-by-pivotal.png} 
-\caption[Spring logo.]{Spring logo.\footnotemark}
-\label{fig.spring.logo}
-\end{figure}
-\footnotetext{Source: \url{https://spring.io/img/spring-by-pivotal.png}}
+% \begin{figure}[!t]
+% \centering
+% \includegraphics[width=7cm]{spring-by-pivotal.png} 
+% \caption[Spring logo.]{Spring logo.\footnotemark}
+% \label{fig.spring.logo}
+% \end{figure}
+% \footnotetext{Source: \url{https://spring.io/img/spring-by-pivotal.png}}
 
 \subsubsection{Database}
 
@@ -233,7 +233,124 @@ The Amazon Route 53, a DNS and Domain Name Registration service, was used to lin
 \section{Web application and social login}
 \subsection{Design [ew. inna nazwa]}
 
+The web application consists of 3 main parts:
+\begin{itemize}
+\item the login screen
+\item the survey - used in the first stage to gather user ratings for products
+\item the recommender - used in the second stage to provide recommendations
+\end{itemize}
+
+\subsubsection{The login}
+[{\bf schemat login flow?}]
+
+Upon entering the website, the user is presented with the login screen, shown in Figure \ref{fig.login}. The top panel contains two buttons: "About", which opens up a popup with additional information on the project, and "Report problem", which leads to a form created in Google Forms for submitting any issues with the application.
+
+The central panel contains the login button for Facebook. When clicked, it uses the Facebook Javascript API to open a new window and guide the user through the Facebook authentication process. The user needs to authorize the Facebook application to access their data, as depicted in Figure \ref{fig.login.fb_app_auth}. Once that is completed, the window is closed and a callback to the original page is activated, informing about a successful login.
+
+Depending on the stage of the project, the user is then redirected either to the survey or to the recommendation page. 
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{reco4_login.png} 
+\caption[Login page.]{Login page.}
+\label{fig.login}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=7cm]{todo.jpg} 
+% width=\textwidth
+\caption[Authorizing the Facebook application.]{Authorizing the Facebook application.}
+\label{fig.login.fb_app_auth}
+\end{figure}
+
+In the background, a Spring component uses the user credentials to query Facebook for additional data. The requested data includes:
+\begin{itemize}
+\item gender
+\item hometown
+\item current city
+\item political view
+\item religion
+\item likes - the Facebook pages that the user "likes"
+\item friends - only those who have also logged in to my website
+\end{itemize}
+
+If during the application authorization process the user edited the sharing options, some or all of the above data may not be accessible.
+
+The received information is processed in the background and stored in the graph database.
+
+\subsubsection{The survey}
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{reco4_survey-intro-1.png} 
+\caption[Survey introduction.]{Survey introduction.}
+\label{fig.survey.intro-1}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{reco4_survey-intro-2.png} 
+\caption[Survey product categories selection.]{Survey product categories selection.}
+\label{fig.survey.intro-2}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=7cm]{todo.jpg} 
+% width=\textwidth
+\caption[The survey.]{The survey.}
+\label{fig.survey}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=7cm]{todo.jpg} 
+% width=\textwidth
+\caption[The survey end.]{The survey end.}
+\label{fig.survey.end}
+\end{figure}
+
+After having successfully logged in, the user is presented with an introduction to the survey, visible in Figure \ref{fig.survey.intro-1}. It explains what the project is about and how to complete the survey, including the description of the rating system.
+
+Users are supposed to choose categories of products that interest them (at least three) and then to rate products in those categories according to their tastes. The rating scale is 1-5, where 1 means "do not like at all" and 5 means "love it". If a user has no opinion about a particular product, they are supposed to leave the rating empty.
+
+For those users that seek additional information about the project, there is the "Learn more" button, which opens a popup window with a more detailed explanation.
+
+Figure \ref{fig.survey.intro-2} shows the categories selection panel, which is located just below the introduction. The users are asked to choose at least three categories, otherwise they are not permitted to proceed. The "Start" button redirects the user to the actual survey.
+
+The survey page (Figure \ref{fig.survey}) presents all products from each category, one at a time. At the top a progress bar informs the user how many categories are left. Each product is contained within a "box", displaying the item's name, picture, price and the rating to be filled. The rating is presented in the form of "stars".
+
+A button at the bottom reloads the page presenting products from the next category. In the case of the last category, it redirects to the survey end page. It is shown in Figure \ref{fig.survey.end} and contains the acknowledgement of the user's contribution to the project.
+
+\subsubsection{The recommender}
+[TODO]
+
 \subsection{Implementation}
+
+\subsubsection{Facebook application configuration}
+The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
+
+The place for managing Facebook applications is the Developers center, available at the URL: \url{https://developers.facebook.com/}.
+
+A new App is created instantaneously, however at first it possesses only the basic permissions for accessing users' data, namely the \url{public_profile}, \url{email} and \url{user_friends} items.
+
+In order to gain permissions for additional information, an approval submission needs to be filled in. Facebook expects detailed explanation, along with screenshots of the website, of how the obtained data will be used. At first my submission was rejected, however the second time, after having stressed that my project is not commercial, but purely academic, the permissions were granted.
+
+In the end my Facebook App has the following permissions that are used in the project:
+\begin{itemize}
+\item \url{public_profile}
+\item \url{user_friends}
+\item \url{user_hometown}
+\item \url{user_location}
+\item \url{user_religion_politics}
+\item \url{user_likes}
+\end{itemize}
+
+\subsubsection{The login}
+
+\subsubsection{The survey}
+
+\subsubsection{The recommender}
 
 %
 \section{User data model in Neo4j}
