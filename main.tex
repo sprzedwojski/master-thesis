@@ -5,6 +5,9 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{txfonts}
 \usepackage{url}
+\usepackage{fixltx2e}
+
+% \usepackage{parskip}
 
 %\usepackage[polish]{babel}
 
@@ -16,10 +19,14 @@
 \renewcommand{\listtablename}{List of tables}
 \renewcommand{\bibname}{Bibliography}
 
+\renewcommand{\labelitemi}{$\diamond$}
+
 \pagestyle{headings}
 
 \setlength{\textwidth}{14cm}
 \setlength{\textheight}{20cm}
+
+% \setlength{\parindent}{20pt}
 
 \newtheorem{definition}{Definition} % przykład nowego środowiska 
 \newtheorem{example}{Example}[chapter] % przykład nowego środowiska 
@@ -145,6 +152,65 @@ CO TO JEST}. \\
 
 
 \chapter[Fundamental information on social...]{Fundamental information on social commerce and recommendation algorithms} \label{fundamental_info}
+
+\section{Social Commerce}
+
+- opisać social media?\\
+- opisać e-commerce?\\
+
+Social commerce is the fusion of social media with e-commerce \cite{social_commerce_syzygy}. It uses social media, which are founded on user interactions and contributions, to improve the shopping experience on the Internet.
+
+The term itself was created by Yahoo! in 2005, referring to an online place where people can share opinions and experiences, find products and services and buy them. Nevertheless, the roots of such practices date back to 1995, when Amazon started encouraging customers to rate and review products they had purchased.\footnote{\cite{social_commerce_syzygy}, p.4}
+
+In the recent years, however, the popularization of social media services such as Facebook or Twitter has given rise to new social commerce tools and opportunities. Examples include social media stores, i.e. storefronts present directly on the social media sites, or portable social graphs, which give access to users' data to third parties. It is the latter that will be of interest to us in the context of this thesis.
+
+% There are various tools and approaches in social commerce. Examples include social shopping, where we can chat with friends
+
+Social commerce can give businesses the following advantages\footnote{\cite{social_commerce_syzygy}, p.2}:
+\begin{itemize}
+\item social media monetization
+\item e-commerce sales optimization
+\item business model innovation
+\end{itemize}
+
+From the customer's point of view, the buying experience can be improved in the following ways\footnote{\cite{social_commerce_syzygy}, p.2}:
+\begin{itemize}
+\item product discovery (social commerce acts as an Awareness Booster)
+\item product selection (Decision Accelerator)
+\item product referral (Advocacy Activator)
+\end{itemize}
+
+According to Dr Paul Marsden of Syzygy Group \cite{social_commerce_syzygy}, there are six dimensions or toolsets for social commerce:
+\begin{enumerate}
+\item Social Shopping
+\item Ratings and Reviews
+\item Recommendations and Referrals
+\item Forums and Communities
+\item Social Media Optimization
+\item Social Ads and Apps
+\end{enumerate}
+
+In this thesis I will focus only on the Recommendations approach to social commerce.
+
+[TODO]
+
+\section{Recommender Systems}
+
+\subsection{Title?}
+
+Recommender Systems (RSs) are software tools and techniques generating recommendations for items that might be interesting to a user \cite{rec_sys_handbook}. "Item" is a general term referring to what the system can recommend to users. It can be almost anything, from movies to watch, music to listen to, products to buy, news to read etc.
+
+One category are the non-personalized recommendations. These typically are the "top" lists, such as "top 10 best rated movies", "top 50 most shopped products". They are simple and may provide a good starting point when no information about a user is known, however they are not in the scope of the RS research.
+
+It is the personalized recommendations that are tackled by RSs. They can be seen as ranked lists of items, most suitable for a user, based on his preferences. To create such a list, the RS requires either explicit user preferences, e.g. ratings of items, or implicit information, i.e. which products the user browsed, how long did they look at each product, what music have they listened to recently.
+
+RSs are based on the observation that people tend to follow recommendations of others while making everyday decisions \footnote{\cite{rec_sys_handbook}, p.2}. Moreover, the second assumption is that if we have similar tastes to someone else, their recommendation would be more accurate than that of a random stranger.
+
+[Functions of recommender systems? (\cite{rec_sys_handbook}, p.4,5)]
+
+\subsection{Recommendation Techniques}
+
+In order to be able to suggest items, a RS must implement a way of predicting the utility of an item to the user. Typically this degree of utility of an item \textit{i} for the user \textit{u} is modelled as a function \textit{R(u,i)}. Then the RS has to predict the value of \textit{R} for each user-item pair - compute \textit{\^{R}(u,i)}, where \textit{\^{R}} is the estimation of the true function \textit{R}. Therefore, for each user, having calculated the prediction on a set of items, i.e., \textit{\^{R}(u,i\textsubscript{1}),...,\^{R}(u,i\textsubscript{N})} the system will recommend the items \textit{i\textsubscript{j\textsubscript{1}},...,i\textsubscript{j\textsubscript{K}}} ($K \leq N$) with the largest predicted utility\footnote{\cite{rec_sys_handbook}, p.10}.
 
 
 % \section{Podstawowe definicje}
@@ -330,13 +396,15 @@ A button at the bottom reloads the page presenting products from the next catego
 \subsubsection{Facebook application configuration}
 The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
 
-The place for managing Facebook applications is the Developers center, available at the URL: \url{https://developers.facebook.com/}.
+The place for managing Facebook applications is the Developer center, available at the URL: \url{https://developers.facebook.com/}.
 
-A new App is created instantaneously, however at first it possesses only the basic permissions for accessing users' data, namely the \url{public_profile}, \url{email} and \url{user_friends} items.
+To properly configure a new App, multiple details need to be provided, including the name, category, type (iOS, Android, web), its domain, website etc. Afterwards, two parameters are generated: App ID and App Secret, that allow client authorization.
 
-In order to gain permissions for additional information, an approval submission needs to be filled in. Facebook expects detailed explanation, along with screenshots of the website, of how the obtained data will be used. At first my submission was rejected, however the second time, after having stressed that my project is not commercial, but purely academic, the permissions were granted.
+When new App is created, at first it possesses only the basic permissions for accessing users' data, namely the \url{public_profile}, \url{email} and \url{user_friends} items.
 
-In the end my Facebook App has the following permissions that are used in the project:
+In order to gain permissions for additional information, an approval submission needs to be filled in. Facebook expects detailed explanation, along with screenshots of the website, of how the obtained data will be used. At first my submission was rejected, however the second time, after having underlined that my project is not commercial, but purely academic, the permissions were granted.
+
+In the end the Facebook App has the following permissions that are used in the project:
 \begin{itemize}
 \item \url{public_profile}
 \item \url{user_friends}
@@ -347,6 +415,10 @@ In the end my Facebook App has the following permissions that are used in the pr
 \end{itemize}
 
 \subsubsection{The login}
+
+The web application is created with the MVC design pattern in mind. Therefore a \textit{Model} manages the data and logic of the application, a \textit{View} presents data to the user in the form of HTML documents and a \textit{Controller} acts as an intermediary between the two, sending data from a model to a view to display it to the user as well as gathering user input from the view and transmitting the information to the model.
+
+
 
 \subsubsection{The survey}
 
@@ -367,7 +439,7 @@ In the end my Facebook App has the following permissions that are used in the pr
 \section{Comparison to non-social recommender systems}
 
 \chapter{Summary and conclusions}
-\section{Usability of the project in AMG.net}
+\section{Usability of the project in AMG.net/Atos}
 \section{Future development perspectives}
 
 % \chapter{Bibliography}
@@ -395,7 +467,11 @@ Loren McDonald. \textit{Social Login: A Data Capture Game Changer} [online]. Sil
 \bibitem{restfb}
 \textit{RestFB} [online]. [access: 28 August 2015]. Accessible online: \url{http://restfb.com/}
 \bibitem{neo4j}
-\textit{Neo4j} [online]. [access: 28 August 2015]. Accessible online" \url{http://neo4j.com/}
+\textit{Neo4j} [online]. [access: 28 August 2015]. Accessible online: \url{http://neo4j.com/}
+\bibitem{social_commerce_syzygy}
+\textit{Social Commerce: Monetizing Social Media} [online]. Syzygy Group, 2010 [access: 1 September 2015]. Accessible online: \url{http://digitalintelligencetoday.com/downloads/White_Paper_Social_Commerce_EN.pdf}, p. 2-12
+\bibitem{rec_sys_handbook}
+Francesco Ricci, Lior Rokach and Bracha Shapira, \textit{Introduction to Recommender Systems Handbook}, Recommender Systems Handbook, Springer, 2011 [access: 2 September 2015]. Accessible online: \url{http://www.inf.unibz.it/~ricci/papers/intro-rec-sys-handbook.pdf}, p. 1-35
 
 \end{thebibliography}
 
