@@ -198,11 +198,12 @@ In this thesis I will focus only on the Recommendations approach to social comme
 
 \subsection{Title?}
 
-Recommender Systems (RSs) are software tools and techniques generating recommendations for items that might be interesting to a user \cite{rec_sys_handbook}. "Item" is a general term referring to what the system can recommend to users. It can be almost anything, from movies to watch, music to listen to, products to buy, news to read etc.
+Recommender Systems (RSs) are software tools and techniques generating recommendations for items that might be interesting to a user \cite{rec_sys_handbook}. "Item" is a general term referring to what the system can recommend. It can be almost anything, from movies to watch, music to listen to, products to buy, news to read etc.
 
 One category are the non-personalized recommendations. These typically are the "top" lists, such as "top 10 best rated movies", "top 50 most shopped products". They are simple and may provide a good starting point when no information about a user is known, however they are not in the scope of the RS research.
 
-It is the personalized recommendations that are tackled by RSs. They can be seen as ranked lists of items, most suitable for a user, based on his preferences. To create such a list, the RS requires either explicit user preferences, e.g. ratings of items, or implicit information, i.e. which products the user browsed, how long did they look at each product, what music have they listened to recently.
+% It is the personalized recommendations that are tackled by RSs.
+What the RSs deal with are personalized recommendations. They can be seen as ranked lists of items, most suitable for a user, based on his preferences. To create such a list, the RS requires either explicit user preferences, e.g. ratings of items, or implicit information, i.e. which products the user browsed, how long did they look at each product, what music have they listened to recently.
 
 RSs are based on the observation that people tend to follow recommendations of others while making everyday decisions \footnote{\cite{rec_sys_handbook}, p.2}. Moreover, the second assumption is that if we have similar tastes to someone else, their recommendation would be more accurate than that of a random stranger.
 
@@ -212,27 +213,21 @@ RSs are based on the observation that people tend to follow recommendations of o
 
 In order to be able to suggest items, a RS must implement a way of predicting the utility of an item to the user. Typically this degree of utility of an item \textit{i} for the user \textit{u} is modelled as a function \textit{R(u,i)}. Then the RS has to predict the value of \textit{R} for each user-item pair - compute \textit{\^{R}(u,i)}, where \textit{\^{R}} is the estimation of the true function \textit{R}. Therefore, for each user, having calculated the prediction on a set of items, i.e., \textit{\^{R}(u,i\textsubscript{1}),...,\^{R}(u,i\textsubscript{N})} the system will recommend the items \textit{i\textsubscript{j\textsubscript{1}},...,i\textsubscript{j\textsubscript{K}}} ($K \leq N$) with the largest predicted utility\footnote{\cite{rec_sys_handbook}, p.10}.
 
+The two most popular classes of recommender systems are {\bf content based} and {\bf collaborative filtering} RSs.\footnote{\cite{rec_sys_handbook}, p.11}
 
-% \section{Podstawowe definicje}
-% Ten podrozdział powinien zawierać dokładny opis terminologii  pojęć zasadniczych dla tematu pracy, którymi autor będzie się posługiwał przy realizacji głównych celów pracy. 
+% \subsubsection{Content based}
+\hbox{}
+{\bf Content based:} The recommended items are similar to the ones that the user liked in the past. Similarities between items are calculated on the basis of their features, e.g. in the case of movies it can be their genre, actors, director etc.
+
+The advantage of such an approach is that there is no need for other users in the system. It could work even if only a single user was using it.
+
+However the disadvantage is that all items need to be well characterised by features, which imposes constraints on item addition. Moreover, only items of the same category can be compared, as it is impossible to directly compare features of, e.g. a movie and a music album. Therefore this kind of system could not work well in a multi-category environment.
+
+% \subsubsection{Collaborative filtering}
+\hbox{}
+{\bf Collaborative filtering:} The idea is to recommend to the active user the items that other users with similar interests liked in the past. The similarity between two users is calculated on the basis of their past ratings of items. Then, if the RS finds that e.g. user B is most similar to the active user A, it will find items highly rated by B that A has not yet rated (thus probably does not know) and recommend them to user A.
 
 
-% \section{Istniejące rozwiązania w dziedzinie}
-% W tym podrozdziale zostaną opisane.....
-% \subsection{Sprzęt}
-% .........................
-% \subsection{Oprogramowanie i wdrożone systemy}
-% .....................................
-% \subsection{}
-% ...................
-
-% \section{Wady i słabe punkty istniejących rozwiązań}
-% \subsection{Efektywność}
-% ..........................
-% \subsection{Utrudniony dostęp}
-% ..............
-% \subsection{Wysokie koszty}
-% ...............................
 
 
 
@@ -799,4 +794,3 @@ Francesco Ricci, Lior Rokach and Bracha Shapira, \textit{Introduction to Recomme
 
 
 \end{document}
-
