@@ -318,19 +318,28 @@ Moreover, this data model was customized in Neo4j to allow for two additional im
 
 \subsection{Comparison with relational and other NoSQL databases}
 
-Why use a graph database? \cite{learning_neo4j}, p.37
+% Why use a graph database? \cite{learning_neo4j}, p.37
 
-[TODO Join bomb \cite{learning_neo4j}, p.27]
+% [TODO Join bomb \cite{learning_neo4j}, p.27]
 
-["graph databases actually take relational databases...", \cite{learning_neo4j}, p.33]
+% ["graph databases actually take relational databases...", \cite{learning_neo4j}, p.33]
 
-[TODO The power of graph databases \cite{graph_databases}, p. 8]
+% [TODO The power of graph databases \cite{graph_databases}, p. 8]
 
-\subsubsection{Performance}
+Even though almost any dataset can be modelled as a graph, it does not mean it always should. There are many cases in which relational or other NoSQL databases are an equal or a better choice. For instance when dealing with large, set-oriented queries, which do not require a lot of joining or require a lot of aggregation on these sets, then the performance will be much better with a relational database. Similarly, with simple, aggregate-oriented queries a key--value or document store would be more efficient \cite{learning_neo4j}.
 
-\subsubsection{Flexibility}
+That said, there are certain scenarios where graph databases greatly outperform any other solutions \cite{learning_neo4j}. 
+\begin{itemize}
+\item {\bf Complex queries}: These are queries that involve a lot of join-style operations. They are very expensive operation in relational database system because of the need to compute the Cartesian product of the indices of tables that are being joined. In graph databases, however, these type of queries are pattern matching queries, which are performed by choosing a starting node and looking for matching occurrences of that pattern in the vicinity of that node - everything that is not connected to the starting node will be omitted. Therefore the performance does not depend on the dataset size, because usually everything is not connected to everything. 
+\item {\bf Intensive queries on live data}: Typically in order to deeply analyze the relational data, it must be duplicated, denormalized and processed by techniques such as Extract, Transform and Load (ETL) to yield query-specific representations. This is because the performance on a live database would be too poor and could slow the entire database. Graph databases, however, are able to handle such complex queries between a web request and a web response, making it applicable to real-time analytics.
+\item {\bf Path finding queries}: In graph databases, when looking for how two elements are interconnected, all that needs to be done is to apply a graph algorithm to a starting and an ending point. In the case of relational databases, one would have to explicitly state how to move from on table to another.
+\end{itemize}
 
-\subsubsection{Agility}
+% \subsubsection{Performance}
+
+% \subsubsection{Flexibility}
+
+% \subsubsection{Agility}
 
 \chapter{Presentation of existing recommender systems}
 
