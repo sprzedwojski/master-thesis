@@ -239,9 +239,98 @@ There exist other types of recommender systems...
 \subsection{Application}
 [TODO: \cite{rec_sys_handbook}, p.14]
 
-\subsection{Graph databases}
+\section{Graph databases}
+
+\subsection{Graphs}
+
+A graph is a collection of vertices and edges, or, more simply put, a set of \textit{nodes} and the \textit{relationships} between them \cite{graph_databases}. It is a general purpose structure, where nodes represent entities and relationships - the ways these entities relate to each other.
+
+Graph theory, the study of graph models and algorithms, has been used in many disciplines \cite{learning_neo4j}:
+\begin{itemize}
+\item {\bf Social studies}: Human beings are a social species, we are interconnected by relations. People interact with people every day, exchange items, ideas, therefore modelling those interactions with graphs seems natural.
+\item {\bf Biological studies}: Biological components and their interactions can be modeled as a graph structure, which has many practical advantages.
+\item {\bf Computer science}: The usage ranges from chip design, network management, recommendation systems, UML modeling to algorithm generation and dependency analysis.
+\item {\bf Flow problems}: Used in telecom / gas / airline / package delivery networks to find the optimal path, bottlenecks, for capacity planning etc. 
+\item {\bf Route problems}: To find the optimal route between two nodes on a network, e.g. car navigation systems.
+\item {\bf Web search}: The original Google search algorithm, PageRank, was a graph algorithm.
+\end{itemize}
+
+[TODO więcej?]
+
+\subsection{Graph Database Management Systems}
+
+The main types of database management systems are:
+\begin{itemize}
+\item {\bf Relational databases}: Data is organized in tables of rows and columns. Because each row has a unique key, rows in a table can be linked to rows in other tables.
+\item {\bf NoSQL databases}: The acronym standing for "Not Only SQL" represents a new generation of databases \cite{learning_neo4j}. These include:
+\begin{itemize}
+\item Key-Value stores
+\item Column-Family stores
+\item Document stores
+\item Graph databases
+\end{itemize}
+\end{itemize}
+
+A graph database management system is an online database management system with Create, Read, Update and Delete (CRUD) methods that expose a graph data model \cite{graph_databases}. Graph databases support transactions and are optimized in terms of transactional performance, integrity and operational availability.
+
+When analyzing graph database technologies, it is important to consider the two factors \cite{graph_databases}:
+\begin{itemize}
+% \item {\bf Underlying storage}: 
+% \item {\bf Processing engine}:
+\item Underlying storage: Some graph databases use the so-called \textit{native graph storage}, designed solely for storing and managing graphs. Others, however, keep the data in other data stores, e.g. in a serialized form in a relational database.
+\item Processing engine: The best performance is gained when a graph database implements \textit{native graph processing}, therefore the connected nodes physically point to each other in the database without the use of indices.
+\end{itemize}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{graph_databases_comp.jpg} 
+\caption[Overview of graph databases.]{Overview of graph databases.\footnotemark{}}
+\label{fig.graph_databases}
+\end{figure}
+\footnotetext{Image source: \cite{graph_databases}, p.7}
+
+Figure \ref{fig.graph_databases} presents different graph database implementations in terms of their compliance with the nativity of both graph processing and graph storage. As it can be seen, Neo4j is one of the most advanced implementations in both aspects. Moreover it is very popular and well documented, therefore it was chosen as the graph database engine for this thesis.
 
 
+\subsection{The Property Graph model}
+
+Data is stored in a graph database using the Property Graph data model \cite{learning_neo4j}. In this model both nodes and relationships can have their \textit{properties}, represented by key--value pairs. It can be characterised by the following:
+\begin{itemize}
+\item There is no fixed schema.
+\item The database can deal with semi-structured data, e.g. some nodes / relationships can have more or less properties than others and it causes no problems.
+\item Nodes and their properties are analogous to rows in a table with fields.
+\item Relationships are explicit, rather than established with a join operation at runtime. They can also have properties, which is unique as compared to relational databases.
+\end{itemize}
+
+Moreover, this data model was customized in Neo4j to allow for two additional important concepts:
+\begin{itemize}
+\item {\bf Node labels}: Each node can have one or more labels, which are a sort of a "special property". It helps create a type structure. They are useful for creating subgraphs in the database or to fetch only nodes of a specific type.
+\item {\bf Relationship types}: Similar to node labels, but for relationships, however they are mandatory. Moreover each relationship can only have one type. They are useful for graph traversals limited to certain kinds of paths only.
+\end{itemize}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{property_graph2.jpg} 
+\caption[Property graph example.]{Property graph example.\footnotemark{}}
+\label{fig.graph_databases}
+\end{figure}
+\footnotetext{Image source: \cite{learning_neo4j}, p.35}
+
+\subsection{Comparison with relational and other NoSQL databases}
+
+Why use a graph database? \cite{learning_neo4j}, p.37
+
+[TODO Join bomb \cite{learning_neo4j}, p.27]
+
+["graph databases actually take relational databases...", \cite{learning_neo4j}, p.33]
+
+[TODO The power of graph databases \cite{graph_databases}, p. 8]
+
+\subsubsection{Performance}
+
+\subsubsection{Flexibility}
+
+\subsubsection{Agility}
 
 \chapter{Presentation of existing recommender systems}
 
@@ -474,6 +563,12 @@ Paul Marsden, \textit{Social Commerce: Monetizing Social Media}, Syzygy Group, 2
 
 \bibitem{rec_sys_handbook}
 Francesco Ricci, Lior Rokach and Bracha Shapira, \textit{Introduction to Recommender Systems Handbook}, Recommender Systems Handbook, Springer, 2011, pp. 1-35, Available at: \url{http://www.inf.unibz.it/~ricci/papers/intro-rec-sys-handbook.pdf}, [access: 2 September 2015].
+
+\bibitem{graph_databases}
+Ian Robinson, Jim Webber and Emil Eifrem, \textit{Graph Databases}, O'Reilly, 2013, pp. VII-IX, 1-... [TODO]
+
+\bibitem{learning_neo4j}
+Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, Available at: \url{http://neo4j.com/book-learning-neo4j/}, [access: 26 March 2015].
 
 \end{thebibliography}
 
