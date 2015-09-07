@@ -69,7 +69,7 @@ While there exist many recommender systems, most of them require initial informa
 
 
 
-Są już systemy rekomendacyjne, ale cierpią na 2 główne problemy: cold start i data sparsity. 
+Są już systemy rekomendacyjne, ale cierpią na 2 główne problemy: cold start i data sparsity. Tu można zaczerpnąć z \cite{snrs}, pp.1-2. 
 Wykorzystanie grafowej bazy danych, dobrze modelującej relacje społeczne.
 
 Osoba podejmująca tematykę stoi przed wyzwaniami: zbudować rzetelną bazę produktów, bazę użytkowników, przekonać użytkowników do udostępnienia danych osobowych etc.
@@ -341,10 +341,26 @@ That said, there are certain scenarios where graph databases greatly outperform 
 
 % \subsubsection{Agility}
 
-\chapter{Presentation of existing recommender systems}
+\chapter{Presentation of existing social recommender systems}
 
 \section{A Social Network-Based Recommender System (SNRS)}
 
+In the paper \cite{snrs} the researchers described their approach to creating a recommender system (RS) taking advantage of social data. They have created a system that incorporates the influence of friends into a classic collaborative filtering approach. 
+
+The dataset used to test the system was obtained by crawling a real online social network Yelp.com. It is a website that enables users to write reviews and rate restaurants, hotels, services etc. Moreover, it provides social features in that the users can invite other users of Yelp to become their "friends", which creates a social graph of interconnections between users.
+
+The researchers proved to be able to leverage the social data to obtain significantly better recommendations than in the case of classic approaches, such as collaborative filtering or naive Bayes with the same dataset. 
+% They claim to have also reduced the problems of cold start and data sparsity.
+
+\hbox{}
+The main shortcoming of this approach is that it is almost as helpless in the face of a new user (cold start) as a typical collaborative filtering system. The solution proposed by the authors is that when a new user joins as a result of an invitation by some existing users, the SNRS can infer the initial friend relationships from this and make recommendations to the new user based on the preferences of his/her friends. 
+
+Even though their results indicate that the SNRS can perform decently even in the above-mentioned conditions, there still exists the cold-start issue when a user is not invited by anybody.
+
+Therefore, the concept in this thesis is different because it primarily targets the cold-start issue not covered by SNRS. Moreover, it is more general as it will use data from Facebook, a general-purpose social network, instead of having to implement a proprietary social network on the target service's website, as in the case of Yelp.com.
+
+
+\section{}
 
 % % %
 \chapter{Implementation of new functionalities}
@@ -588,3 +604,4 @@ Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, Available at: 
 \listoftables
 
 \end{document}
+
