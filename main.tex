@@ -160,20 +160,20 @@ Spodziewane efekty:\\
 
 Social commerce is the fusion of social media with e-commerce \cite{social_commerce_syzygy}. It uses social media, which are founded on user interactions and contributions, to improve the shopping experience on the Internet.
 
-The term itself was created by Yahoo! in 2005, referring to an online place where people can share opinions and experiences, find products and services and buy them. Nevertheless, the roots of such practices date back to 1995, when Amazon started encouraging customers to rate and review products they had purchased.\footnote{\cite{social_commerce_syzygy}, p.4}
+The term itself was created by Yahoo! in 2005, referring to an online place where people can share opinions and experiences, find products and services and buy them. Nevertheless, the roots of such practices date back to 1995, when Amazon started encouraging customers to rate and review products they had purchased \cite{social_commerce_syzygy}.
 
 In the recent years, however, the popularization of social media services such as Facebook or Twitter has given rise to new social commerce tools and opportunities. Examples include social media stores, i.e. storefronts present directly on the social media sites, or portable social graphs, which give access to users' data to third parties. It is the latter that will be of interest to us in the context of this thesis.
 
 % There are various tools and approaches in social commerce. Examples include social shopping, where we can chat with friends
 
-Social commerce can give businesses the following advantages\footnote{\cite{social_commerce_syzygy}, p.2}:
+Social commerce can give businesses the following advantages \cite{social_commerce_syzygy}:
 \begin{itemize}
 \item social media monetization
 \item e-commerce sales optimization
 \item business model innovation
 \end{itemize}
 
-From the customer's point of view, the buying experience can be improved in the following ways\footnote{\cite{social_commerce_syzygy}, p.2}:
+From the customer's point of view, the buying experience can be improved in the following ways \cite{social_commerce_syzygy}:
 \begin{itemize}
 \item product discovery (social commerce acts as an Awareness Booster)
 \item product selection (Decision Accelerator)
@@ -205,15 +205,15 @@ One category are the non-personalized recommendations. These typically are the "
 % It is the personalized recommendations that are tackled by RSs.
 What the RSs deal with are personalized recommendations. They can be seen as ranked lists of items, most suitable for a user, based on his preferences. To create such a list, the RS requires either explicit user preferences, e.g. ratings of items, or implicit information, i.e. which products the user browsed, how long did they look at each product, what music have they listened to recently.
 
-RSs are based on the observation that people tend to follow recommendations of others while making everyday decisions \footnote{\cite{rec_sys_handbook}, p.2}. Moreover, the second assumption is that if we have similar tastes to someone else, their recommendation would be more accurate than that of a random stranger.
+RSs are based on the observation that people tend to follow recommendations of others while making everyday decisions \cite{rec_sys_handbook}. Moreover, the second assumption is that if we have similar tastes to someone else, their recommendation would be more accurate than that of a random stranger.
 
 [Functions of recommender systems? (\cite{rec_sys_handbook})]
 
 \subsection{Recommendation Techniques}
 
-In order to be able to suggest items, a RS must implement a way of predicting the utility of an item to the user. Typically this degree of utility of an item \textit{i} for the user \textit{u} is modelled as a function \textit{R(u,i)}. Then the RS has to predict the value of \textit{R} for each user-item pair - compute \textit{\^{R}(u,i)}, where \textit{\^{R}} is the estimation of the true function \textit{R}. Therefore, for each user, having calculated the prediction on a set of items, i.e., \textit{\^{R}(u,i\textsubscript{1}),...,\^{R}(u,i\textsubscript{N})} the system will recommend the items \textit{i\textsubscript{j\textsubscript{1}},...,i\textsubscript{j\textsubscript{K}}} ($K \leq N$) with the largest predicted utility\footnote{\cite{rec_sys_handbook}, p.10}.
+In order to be able to suggest items, a RS must implement a way of predicting the utility of an item to the user. Typically this degree of utility of an item \textit{i} for the user \textit{u} is modelled as a function \textit{R(u,i)}. Then the RS has to predict the value of \textit{R} for each user-item pair - compute \textit{\^{R}(u,i)}, where \textit{\^{R}} is the estimation of the true function \textit{R}. Therefore, for each user, having calculated the prediction on a set of items, i.e., \textit{\^{R}(u,i\textsubscript{1}),...,\^{R}(u,i\textsubscript{N})} the system will recommend the items \textit{i\textsubscript{j\textsubscript{1}},...,i\textsubscript{j\textsubscript{K}}} ($K \leq N$) with the largest predicted utility \cite{rec_sys_handbook}.
 
-The two most popular classes of recommender systems are {\bf content based} and {\bf collaborative filtering} RSs.\footnote{\cite{rec_sys_handbook}, p.11}
+The two most popular classes of recommender systems are {\bf content based} and {\bf collaborative filtering} RSs \cite{rec_sys_handbook}.
 
 % \subsubsection{Content based}
 \hbox{}
@@ -341,11 +341,11 @@ That said, there are certain scenarios where graph databases greatly outperform 
 
 % \subsubsection{Agility}
 
-\chapter{Presentation of existing social recommender systems}
+\chapter[Presentation of existing social recommender...]{Presentation of existing social recommender systems}
 
-\section{A Social Network-Based Recommender System (SNRS)}
+\section{"A Social Network-Based Recommender System (SNRS)"}
 
-In the paper \cite{snrs} the researchers described their approach to creating a recommender system (RS) taking advantage of social data. They have created a system that incorporates the influence of friends into a classic collaborative filtering approach. 
+In the paper \cite{snrs} the researchers from the University of California described their approach to creating a recommender system (RS) taking advantage of social data. They have created a system that incorporates the influence of friends into a classic collaborative filtering approach. 
 
 The dataset used to test the system was obtained by crawling a real online social network Yelp.com. It is a website that enables users to write reviews and rate restaurants, hotels, services etc. Moreover, it provides social features in that the users can invite other users of Yelp to become their "friends", which creates a social graph of interconnections between users.
 
@@ -360,7 +360,23 @@ Even though their results indicate that the SNRS can perform decently even in th
 Therefore, the concept in this thesis is different because it primarily targets the cold-start issue not covered by SNRS. Moreover, it is more general as it will use data from Facebook, a general-purpose social network, instead of having to implement a proprietary social network on the target service's website, as in the case of Yelp.com.
 
 
-\section{}
+\section{"Recommender System from Personal Social Networks"}
+
+David Ben-Shimon et al. \cite{ben_gurion} from Ben-Gurion University developed a new paradigm for incorporating the feedback of the user's friends in a recommender system. 
+
+They have tested their system on a group of 50 users, all of which had to indicate their friends from the group and rate 108 movies on a scale of 1 to 5. The list of recommendations for each user is based on the items that his/her friends like and dislike. Recommendations are constructed by summing the impact of ratings of the personal social network, both positive and negative. Moreover, they are based not only on ratings of the closest friends, but also of those at a greater \textit{distance} in the social network (i.e. friends of friends), with the appropriate attenuation (the \textit{farther} the user, the lesser the impact).
+
+The results of tests have shown that this approach received similar results to the situation, when the most popular movies were recommended instead. The authors speculate that some of the algorithm's parameters could be tweaked to potentially improve the performance.
+
+\hbox{}
+In addition to the mediocre results, this system does not at all solve the issue of cold-start. Before recommendations for a user can be generated, he/she has to provide both the information about friends and ratings of items.
+
+This is again different from Reco4Social, which primarily aims to eliminate the need for the users to provide any additional information apart that, which can be collected from their social network.
+
+
+\section{other...}
+
+[TODO czy tutaj jakiś kolejny social RS (np. aranda.pdf), czy jakiś klasyczny RS, np. netflix, amazon? --> pytanie do promotora?]
 
 % % %
 \chapter{Implementation of new functionalities}
@@ -546,6 +562,10 @@ The web application is created with the MVC design pattern in mind. Therefore a 
 
 \section{Recommendation algorithm}
 
+- niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami\\
+
+-
+
 \chapter{Evaluation}
 \section{Evaluation of predictive and classification accuracy}
 \section{Evaluation of computation time and resource consumption}
@@ -554,6 +574,8 @@ The web application is created with the MVC design pattern in mind. Therefore a 
 \chapter{Summary and conclusions}
 \section{Usability of the project in AMG.net/Atos}
 \section{Future development perspectives}
+
+- większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
 
 % \chapter{Bibliography}
 
@@ -590,10 +612,13 @@ Paul Marsden, \textit{Social Commerce: Monetizing Social Media}, Syzygy Group, 2
 Francesco Ricci, Lior Rokach and Bracha Shapira, \textit{Introduction to Recommender Systems Handbook}, Recommender Systems Handbook, Springer, 2011, pp. 1-35, Available at: \url{http://www.inf.unibz.it/~ricci/papers/intro-rec-sys-handbook.pdf}, [access: 2 September 2015].
 
 \bibitem{graph_databases}
-Ian Robinson, Jim Webber and Emil Eifrem, \textit{Graph Databases}, O'Reilly, 2013, pp. VII-IX, 1-... [TODO]
+Ian Robinson, Jim Webber and Emil Eifrem, \textit{Graph Databases}, O'Reilly, 2013, pp. 1-10.
 
 \bibitem{learning_neo4j}
-Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, Available at: \url{http://neo4j.com/book-learning-neo4j/}, [access: 26 March 2015].
+Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, pp. 11-41. Available at: \url{http://neo4j.com/book-learning-neo4j/}, [access: 26 March 2015].
+
+\bibitem{ben_gurion}
+David Ben-Shimon et al., \textit{Recommender System from Personal Social Networks}, Ben-Gurion University, Available at: \url{http://fohs.bgu.ac.il/research/upload/23408/RECOMMENDER%20SYSTEMS%20FROM%20SOCIAL%20NETWORK.pdf}, [access: 26 April 2015].
 
 \end{thebibliography}
 
