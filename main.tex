@@ -556,9 +556,9 @@ The web application is created with the MVC design pattern in mind. Therefore a 
 %
 \section{User data model in Neo4j}
 
-\subsection{Introduction to Graph Databases}
+% \subsection{Introduction to Graph Databases}
 
-\subsection{Data model}
+% \subsection{Data model}
 
 \section{Recommendation algorithm}
 
@@ -567,7 +567,78 @@ The web application is created with the MVC design pattern in mind. Therefore a 
 -
 
 \chapter{Evaluation}
+
+[TODO jakiś wstęp]
+
+- jak zostala zrobiona (idea, że offline, k-fold x-valid. etc.)
+
 \section{Evaluation of predictive and classification accuracy}
+
+\subsection{Ratings prediction accuracy}
+
+Prediction accuracy is the most popular metric in the recommendation system literature \cite{eval_microsoft}. It defines how correct are the recommendation results compared to real user data. For this a test user base with ratings is needed. 
+
+There are two main measures of prediction accuracy which were used in testing Reco4Social:
+\begin{itemize}
+\item {\bf Root Mean Squared Error (RMSE)}: The system generates predicted ratings $\hat{r}_{ui}$ for a test set $N$ of user-item pairs $(u,i)$ for which the true ratings $r_{ui}$ are known. In this case the ratings were obtained from users during the initial, survey part of the project. The formula for calculating the RMSE between the predicted and actual ratings is:
+\end{itemize}
+
+\begin{equation}
+RMSE = \sqrt{\frac{1}{|N|} \displaystyle\sum_{(u,i) \in N} (\hat{r}_{ui} - r_{ui})^2 }
+\label{eq.rmse}
+\end{equation}
+\hbox{}
+
+\begin{itemize}
+\item {\bf Mean Absolute Error (MAE)}: This is a similar alternative, given by the formula:
+\end{itemize}
+
+\begin{equation}
+MAE = \frac{1}{|N|} \displaystyle\sum_{(u,i) \in N} |\hat{r}_{ui} - r_{ui}|
+\label{eq.mae}
+\end{equation}
+\hbox{}
+
+Evaluation was performed by calculating RMSE and MAE for each user in the database. This is effectively a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
+
+[TODO wyniki + opis]
+
+\subsection{Classification accuracy}
+
+This is an accuracy metrics that measures how well the system can classify items as relevant or not \cite{eval_twente}. The magnitude of the error between the predicted and real rating is ignored.
+
+There are two dominant measures, precision and recall. Precision is the ratio of relevant items selected to the number of items selected. It would be easy to recommend many items and count on the fact that some of them might interest the user. The goal is, however, to show only the important items. The higher the recall, the better the RS in this regard. The formula for precision calculation is presented in Equation \ref{eq.precision}, where $B_{rs}$ represents the relevant selected items and $B_s$ stands for all the selected items.
+
+\begin{equation}
+Precision = \frac{|B_{rs}|}{|B_{s}|}
+\label{eq.precision}
+\end{equation}
+\hbox{}
+
+Recall, on the other hand, represents the ratio between the number of relevant items selected and the total number of relevant items $B_r$. It illustrates how many of all items interesting to the user was the system capable of finding. Equation \ref{eq.recall} depicts recall.
+
+\begin{equation}
+Recall = \frac{|B_{rs}|}{|B_{r}|}
+\label{eq.recall}
+\end{equation}
+\hbox{}
+
+In order to find precision and recall, the notion of relevance has to be defined. For the purpose of this evaluation two approaches were employed:
+\begin{itemize}
+\item considering all items rated by the user 4-5 as relevant, and all those rated 1-3 as non relevant
+\item calculating the average rating for each user (for all products) and using it as a threshold -- all items rated below are not relevant and all those rated above are relevant.
+\end{itemize}
+
+It has been shown that precision and recall are related -- when one increases, the other decreases. There exist methods that take both of them into account and produce a single metric. The most popular is the F-measure, illustrated in Equation \ref{eq.fmeasure}, which is a harmonic mean of precision and recall. The results are on a scale from 0 (worst) to 1 (best).
+
+\begin{equation}
+F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
+\label{eq.fmeasure}
+\end{equation}
+\hbox{}
+
+[TODO wyniki + opis]
+
 \section{Evaluation of computation time and resource consumption}
 \section{Comparison to non-social recommender systems}
 
@@ -619,6 +690,12 @@ Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, pp. 11-41. Ava
 
 \bibitem{ben_gurion}
 David Ben-Shimon et al., \textit{Recommender System from Personal Social Networks}, Ben-Gurion University, Available at: \url{http://fohs.bgu.ac.il/research/upload/23408/RECOMMENDER%20SYSTEMS%20FROM%20SOCIAL%20NETWORK.pdf}, [access: 26 April 2015].
+
+\bibitem{eval_microsoft}
+Guy Shani and Asela Gunawardana, \textit{Evaluating Recommendation Systems}, Microsoft Research, pp. 15-16, Available at: \url{http://research.microsoft.com/pubs/115396/EvaluationMetrics.TR.pdf}, [access: 11 May 2015].
+
+\bibitem{eval_twente}
+Joost de Wit, \textit{Evaluating Recommender Systems}, TNO Information and Communication Technology, University of Twente, pp. 28-30, Available at: \url{http://essay.utwente.nl/59711/1/MA_thesis_J_de_Wit.pdf}, [access: 11 May 2015].
 
 \end{thebibliography}
 
