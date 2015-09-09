@@ -312,7 +312,7 @@ Moreover, this data model was customized in Neo4j to allow for two additional im
 \centering
 \includegraphics[width=\textwidth]{property_graph2.jpg} 
 \caption[Property graph example.]{Property graph example.\footnotemark{}}
-\label{fig.graph_databases}
+\label{fig.property_graph}
 \end{figure}
 \footnotetext{Image source: \cite{learning_neo4j}, p.35}
 
@@ -556,9 +556,48 @@ The web application is created with the MVC design pattern in mind. Therefore a 
 %
 \section{User data model in Neo4j}
 
-% \subsection{Introduction to Graph Databases}
+[TODO jakiś wstęp]
 
-% \subsection{Data model}
+\subsection{Data constructs}
+
+The Property Graph data model provides four main building blocks for storing data in Neo4j \cite{learning_neo4j}:
+\begin{itemize}
+\item {\bf Nodes}: store entity information.
+\item {\bf Relationships}: connect nodes to one another; they always have a type, a start and an end node, and a direction.
+\item {\bf Properties}: key-value pairs belonging to a node / relationship, describing its features.
+\item {\bf Labels}: describe the "type" of a node.
+\end{itemize}
+
+\subsection{Modelling}
+
+To start modelling a graph database, it is useful to employ an Entity-Relationship diagram, as in the case of relational systems \cite{learning_neo4j}. Next, the following information can be extracted from a domain description:
+\begin{itemize}
+\item entities -- from the nouns of the description
+\item properties -- from the adjectives of the description
+\item relationship -- from the verbs in the description
+\end{itemize}
+
+[TODO? przykład ER diagram, pokazanie że w GDB nie trzeba join tables? \cite{learning_neo4j}, pp. 77-79]
+
+[TODO? opisanie dobrych/złych praktyk modelowania? (\cite{learning_neo4j}, pp. 79-88)]
+
+\subsection{Reco4Social model}
+
+The data model implemented in the project is presented in Figure \ref{fig.data_model}. The rectangles represent nodes, with labels in bold and properties below. Arrows linking nodes are the relationships, with the relationship types in bold and with optional properties.
+
+The node central to the model is the \textit{User} node which can be related to almost all other nodes, including itself. The nodes \textit{Gender}, \textit{City}, \textit{Religion}, \textit{PoliticalView} and \textit{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \textit{User} and \textit{City}, which is perfectly acceptable in graph databases. The \textit{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \textit{(User)-[LIKES]-(Page)} and \textit{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
+
+In the lower part of the schema there is the \textit{Product} node. It belongs to a \textit{ProductCategory} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \textit{RATES} relationship. 
+
+[TODO? coś jeszcze?]
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{neo4j_data_model3.png} 
+% width=\textwidth
+\caption[Data model in Neo4j.]{Data model in Neo4j.}
+\label{fig.data_model}
+\end{figure}
 
 \section{Recommendation algorithm}
 
@@ -648,6 +687,8 @@ F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
 
 - większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
 
+- avoid supernodes (the dense node pattern, \cite{learning_neo4j}, pp. 88-89)
+
 % \chapter{Bibliography}
 
 % \chapter{Appendices}
@@ -686,7 +727,7 @@ Francesco Ricci, Lior Rokach and Bracha Shapira, \textit{Introduction to Recomme
 Ian Robinson, Jim Webber and Emil Eifrem, \textit{Graph Databases}, O'Reilly, 2013, pp. 1-10.
 
 \bibitem{learning_neo4j}
-Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, pp. 11-41. Available at: \url{http://neo4j.com/book-learning-neo4j/}, [access: 26 March 2015].
+Rik Van Bruggen, \textit{Learning Neo4j}, Packt Publishing, 2014, pp. 11-41:74-[TODO]. Available at: \url{http://neo4j.com/book-learning-neo4j/}, [access: 26 March 2015].
 
 \bibitem{ben_gurion}
 David Ben-Shimon et al., \textit{Recommender System from Personal Social Networks}, Ben-Gurion University, Available at: \url{http://fohs.bgu.ac.il/research/upload/23408/RECOMMENDER%20SYSTEMS%20FROM%20SOCIAL%20NETWORK.pdf}, [access: 26 April 2015].
