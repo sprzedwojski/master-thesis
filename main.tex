@@ -93,6 +93,12 @@ Spodziewane efekty:\\
 % wierszy po 60 znaków)}
 
 \section{Objectives}
+
+- ofkors że zrobić RS [rozwinąć to]
+
+- zaimplementować jako stronkę
+    -- ma być "ładna", żeby testowi userzy chcieli wypełnić ankietę
+
 % Wymienić w punktach cele pracy, rozpoczynając od celów poznawczych (dotyczą\-cych
 % zebrania wiadomości, przybliżenia/popularyzacji technik / metod / zagaadnień).
 % W~drugiej kolejności wyienić cele praktyczne.
@@ -617,7 +623,7 @@ The method obtains a \texttt{User} object from the view, containing the \texttt{
 This data is used to create a user node in the database with the use of the \texttt{getUserNode()} method in the \texttt{GDBM} (\texttt{Graph\-DB\-Manager} object). Next, the \texttt{access\-Token} and \texttt{userId} are set as session attributes for future reference. Finally, the \texttt{process\-User} method in the \texttt{Facebook\-Service} component will asynchronously fetch all the remaining user data from the social network and the user is redirected to the store's main page.
 
 \hbox{}
-To access objects such as the aforementioned \texttt{GDBM} or \texttt{Facebook\-Service} the Spring's dependency injection mechanism is used. Instead of manually instantiating the objects, one only needs to append the \texttt{@Autowired} annotation to the field declaration, as presented in Listing \ref{listing.autowiring}.
+To access objects such as the aforementioned \texttt{GDBM} or \texttt{Facebook\-Service} the Spring's dependency injection mechanism is used. Instead of manually instantiating the objects, one only needs to append the \texttt{@Autowired} annotation to the field declaration, as presented in Listing \ref{listing.autowiring}. However, for this to be possible, the \texttt{app-context.xml} file should contain an XML element \texttt{context:\-component\--scan} configured to indicate packages that Spring should scan for the autowired dependencies.
 
 \begin{listing}
 \begin{minted}[frame=lines,framesep=3mm]{java}
@@ -630,7 +636,20 @@ private GraphDBManager GDBM;
 \label{listing.autowiring}
 \end{listing}
 
+[TODO? opisać FacebookService?]
+
 \subsubsection{The survey}
+
+Survey introduction is defined in the \texttt{survey\-\_intro\-.jsp} view and is handled by \texttt{Survey\-Intro\-Controller}. The list of all possible product categories is fetched from the model by the controller and passed to the view as an attribute of a \texttt{Model\-Map}, where they are all presented to the user to choose those that interest him/her. 
+
+The user is required to choose at least three categories. There is a front-end validation that, if less categories are selected, will not submit the form and will instead show the user an error message, prompting to rectify the choice. It has been realized with the use of the jQuery Validate plugin \cite{jquery_validate}.
+
+When the user choice is submitted, the controller stores the selected categories in an array in the session and redirects the user to the survey.
+
+\hbox{}
+Analogically, the survey page is administered by \texttt{survey\-.jsp} and \texttt{Survey\-Controller}. The products presentation has been implemented on the basis of an online e-commerce template \cite{bootply_ecommerce}. The "star" rating system was developed using the jQuery Raty plugin \cite{jquery_raty}. Each time a user rates a product, an AJAX POST request is sent to the controller and the rating is stored in the database. This feature has been implemented in order to avoid situations where the user would abandon the survey in the middle of a category and all his ratings for this category would be lost without the form submission.
+
+[TODO? coś jeszcze?]
 
 \subsubsection{The recommender}
 
@@ -828,6 +847,15 @@ Joost de Wit, \textit{Evaluating Recommender Systems}, TNO Information and Commu
 
 \bibitem{facebook_login_web}
 \textit{Facebook Login for the Web with the JavaScript SDK}, Facebook Developers website, Available at: \url{https://developers.facebook.com/docs/facebook-login/web}, [access: 10 September 2015].
+
+\bibitem{jquery_validate}
+Web page of \textit{jQuery Validate} plugin, Available at: \url{http://jqueryvalidation.org/}, [access: 5 May 2015].
+
+\bibitem{bootply_ecommerce}
+Web page of an \textit{E-Commerce Template}, Bootply.com, Available at: \url{http://www.bootply.com/s7dUyTggDX}, [access: 5 May 2015].
+
+\bibitem{jquery_raty}
+Web page of \textit{jQuery Raty}, Available at: \url{http://wbotelhos.com/raty}, [access: 5 May 2015].
 
 \end{thebibliography}
 
