@@ -6,6 +6,8 @@
 \usepackage{txfonts}
 \usepackage{url}
 \usepackage{fixltx2e}
+\usepackage{minted}
+\usepackage{xcolor}
 
 % \usepackage{parskip}
 
@@ -537,9 +539,7 @@ As soon as the AJAX request has been sent, the user is presented with a "Generat
 \hbox{}
 Thanks to this design decision the RS processing does not slow down page loading and would not in any way hamper the user's experience with the store. This is crucial nowadays, as page loading time is one of the key factors for users, which tend to abandon sites that load too slowly.
 
-\subsection{Implementation}
-
-\subsubsection{Facebook application configuration}
+\subsection{Facebook application configuration}
 The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
 
 The place for managing Facebook applications is the Developer center, available at the URL: \url{https://developers.facebook.com/}.
@@ -560,11 +560,75 @@ In the end the Facebook App has the following permissions that are used in the p
 \item \url{user_likes}
 \end{itemize}
 
+[TODO Graph API? Na jakie EP uderzamy? czy to dalej?]
+
+\subsection{Implementation}
+
+The web application is created with the MVC design pattern in mind. Therefore a \textit{Model} manages the data and logic of the application, a \textit{View} presents data to the user in the form of HTML documents and a \textit{Controller} acts as an intermediary between the two, sending data from a model to a view as well as gathering user input from the view and transmitting the information back to the model.
+
+The project structure is typical for Spring, with the following main folders under \texttt{/src/main}:
+\begin{itemize}
+\item \texttt{java} contains all Java classes, divided into packages:
+    \begin{itemize}
+    \item \texttt{controllers}: Controller classes
+    \item \texttt{facebook}: \texttt{FacebookService} responsible for accessing Facebook data.
+    \item \texttt{labels}: \texttt{Label} interface implementations for Neo4j nodes.
+    \item \texttt{neo4j}: Classes accessing the database.
+    \item \texttt{prop}: Properties classes.
+    \item \texttt{recommender}: Classes generating and validating recommendations.
+    \end{itemize}
+\item \texttt{resources} contains \texttt{properties} files.
+\item \texttt{webapp} contains views (JSP files) and JS/CSS files.
+\end{itemize}
+
+
 \subsubsection{The login}
 
-The web application is created with the MVC design pattern in mind. Therefore a \textit{Model} manages the data and logic of the application, a \textit{View} presents data to the user in the form of HTML documents and a \textit{Controller} acts as an intermediary between the two, sending data from a model to a view to display it to the user as well as gathering user input from the view and transmitting the information to the model.
+The view containing the login page layout is \texttt{login.jsp}. It defines the layout with the use of HTML and by importing the appropriate CSS files. Some elements that are repeatable on many pages, such as the navigation bar or the footer, are defined in their own JSP files and included where necessary (an example is shown in Listing \ref{listing.jsp_include}).
 
+\begin{listing}
+\inputminted[frame=lines,framesep=3mm]{jsp}{code_jsp_include.jsp}
+\caption{Example of including repeatable JSP elements from files.}
+\label{listing.jsp_include}
+\end{listing}
 
+All JSPs also import JavaScript libraries and can define their own JS code. In the case of \texttt{login.jsp}, it contains all methods necessary to connect to Facebook for user authentication and authorisation. They are based on exemplary code available on the Facebook Developers page \cite{facebook_login_web}.
+
+In order to allow the users to log in, a Login Button social plugin was included. It is a custom HTML5 element that triggers the Facebook JavaScript SDK \texttt{login()} method when clicked. It accepts additional data as attributes of the HTML element. One of them is \texttt{scope}, where all permissions required from each user are defined. It is on this basis that this information can then be accessed from a user's profile. The login button declaration is depicted in Listing \ref{listing.login_button}.
+
+\begin{listing}
+\inputminted[frame=lines,framesep=3mm]{html}{code_login_button.html}
+\caption{The Facebook login button declaration.}
+\label{listing.login_button}
+\end{listing}
+
+Upon successful Facebook login the page form is submitted to the \texttt{Login\-Controller.java}. Method resposible for handling this POST request is \texttt{home\-Submit()} and its simplified version is shown in Listing \ref{listing.controller_login_homesubmit} to illustrate how controllers are built.
+
+\begin{listing}[!t]
+\inputminted[frame=lines,framesep=3mm]{java}{code_controller_login.java}
+\caption{\texttt{LoginController.java} fragment.}
+\label{listing.controller_login_homesubmit}
+\end{listing}
+
+First, the \texttt{LoginController} class requires the Spring's \texttt{@Controller} annotation above the class name in order to be interpreted as a controller component. The particular method that handles the page submit also has an annotation: \texttt{@Request\-Mapping}. It maps a particular URL, defined as \texttt{value} attribute, to this method -- in this case it is the \texttt{/login} URL. Moreover, by defining the \texttt{method} attribute the scope of this method is limited to handle only POST requests.
+
+The method obtains a \texttt{User} object from the view, containing the \texttt{access\-Token} received from Facebook as a result of authentication. This token is then used each time when connecting to Facebook from the backend. In this case, with the use of RestFB, a lightweight Java library, a \texttt{Default\-Facebook\-Client} object is created. Next, it fetches the user's basic social profile data, available in the Facebook Graph API at the \texttt{/me} URL.
+
+This data is used to create a user node in the database with the use of the \texttt{getUserNode()} method in the \texttt{GDBM} (\texttt{Graph\-DB\-Manager} object). Next, the \texttt{access\-Token} and \texttt{userId} are set as session attributes for future reference. Finally, the \texttt{process\-User} method in the \texttt{Facebook\-Service} component will asynchronously fetch all the remaining user data from the social network and the user is redirected to the store's main page.
+
+\hbox{}
+To access objects such as the aforementioned \texttt{GDBM} or \texttt{Facebook\-Service} the Spring's dependency injection mechanism is used. Instead of manually instantiating the objects, one only needs to append the \texttt{@Autowired} annotation to the field declaration, as presented in Listing \ref{listing.autowiring}.
+
+\begin{listing}
+\begin{minted}[frame=lines,framesep=3mm]{java}
+@Autowired
+private FacebookService facebookService;
+@Autowired
+private GraphDBManager GDBM;
+\end{minted}
+\caption{Dependency injection in Spring with the \texttt{@Autowired} annotation.}
+\label{listing.autowiring}
+\end{listing}
 
 \subsubsection{The survey}
 
@@ -761,6 +825,9 @@ Guy Shani and Asela Gunawardana, \textit{Evaluating Recommendation Systems}, Mic
 
 \bibitem{eval_twente}
 Joost de Wit, \textit{Evaluating Recommender Systems}, TNO Information and Communication Technology, University of Twente, pp. 28-30, Available at: \url{http://essay.utwente.nl/59711/1/MA_thesis_J_de_Wit.pdf}, [access: 11 May 2015].
+
+\bibitem{facebook_login_web}
+\textit{Facebook Login for the Web with the JavaScript SDK}, Facebook Developers website, Available at: \url{https://developers.facebook.com/docs/facebook-login/web}, [access: 10 September 2015].
 
 \end{thebibliography}
 
