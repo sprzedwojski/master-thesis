@@ -453,8 +453,8 @@ Depending on the stage of the project, the user is then redirected either to the
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=7cm]{todo.jpg} 
-% width=\textwidth
+\includegraphics[width=10cm]{fb_auth.png} 
+% width=7cm | \textwidth
 \caption[Authorizing the Facebook application.]{Authorizing the Facebook application.}
 \label{fig.login.fb_app_auth}
 \end{figure}
@@ -491,16 +491,14 @@ The received information is processed in the background and stored in the graph 
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=7cm]{todo.jpg} 
-% width=\textwidth
+\includegraphics[width=\textwidth]{survey2.png} 
 \caption[The survey.]{The survey.}
 \label{fig.survey}
 \end{figure}
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=7cm]{todo.jpg} 
-% width=\textwidth
+\includegraphics[width=\textwidth]{survey_end.png} 
 \caption[The survey end.]{The survey end.}
 \label{fig.survey.end}
 \end{figure}
@@ -518,7 +516,26 @@ The survey page (Figure \ref{fig.survey}) presents all products from each catego
 A button at the bottom reloads the page presenting products from the next category. In the case of the last category, it redirects to the survey end page. It is shown in Figure \ref{fig.survey.end} and contains the acknowledgement of the user's contribution to the project.
 
 \subsubsection{The recommender}
-[TODO]
+
+In the second part of the project, when a user has logged in with Facebook, he/she is no longer redirected to the survey, but instead is presented with the main store page. The centerpiece of the page is the recommendations pane. In a real life situation this would be a typical storefront, with the "suggested items" block located on top of the page or somewhere to the side.
+
+One of the design goals was to make the recommender seamlessly integrate with any existing storefront. Even though the RS generates recommendations very quickly, within the time frame of a web request and response, the limiting factor is the social network user data fetching, which takes up a significant amount of time (several seconds, depending on the user). Moreover, if the system were to serve more users, the RS could operate slightly longer (though the impact would be much lower than in the case of a relational database).
+
+With that in mind, the recommendations presentation was designed to be asynchronous. When the store's main page has loaded, there is an AJAX request to the controller. It then repeatedly checks whether user data fetching has finished. When it is done the controller starts the RS and then sends its results back to the view (the web page). 
+
+[TODO może to trochę zmienimy, żeby to nie kontroler inicjował RS tylko jednak ten FBservice. W ten sposób rekomendacje nie będą "przekalkulowywane" ponownie przy każdym załadowaniu strony.]
+
+As soon as the AJAX request has been sent, the user is presented with a "Generating recommendations..." loading image. When the backend processing has finished and an AJAX response is received, the image is replaced with the generated recommendations. This process is illustrated in Figure \ref{fig.reco_gen_done}.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{reco_gen_done.png} 
+\caption[Recommendations generation.]{Recommendations generation. [TODO zmienić to? większy obrazek z lepszą rozdzielczością?]}
+\label{fig.reco_gen_done}
+\end{figure}
+
+\hbox{}
+Thanks to this design decision the RS processing does not slow down page loading and would not in any way hamper the user's experience with the store. This is crucial nowadays, as page loading time is one of the key factors for users, which tend to abandon sites that load too slowly.
 
 \subsection{Implementation}
 
@@ -611,6 +628,8 @@ In the lower part of the schema there is the \textit{Product} node. It belongs t
 
 - jak zostala zrobiona (idea, że offline, k-fold x-valid. etc.)
 
+- że z ponad 100 userów zrobiło się 90 po odfiltrowaniu
+
 \section{Evaluation of predictive and classification accuracy}
 
 \subsection{Ratings prediction accuracy}
@@ -686,6 +705,11 @@ F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
 \section{Future development perspectives}
 
 - większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
+
+- przechowywanie raz wyliczonych rekomendacji w bazie, jakies batch-owe przeliczanie
+
+- podpięcie do klasycznego CF
+-- wpływ innych czynników na rozwój rekomendacji: interakcja ze stroną, przeglądanie produktów etc.
 
 - avoid supernodes (the dense node pattern, \cite{learning_neo4j}, pp. 88-89)
 
