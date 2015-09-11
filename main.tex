@@ -2,8 +2,8 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{txfonts}
+\usepackage{amsmath,amsfonts}
+\usepackage{newtxtext,newtxmath}
 \usepackage{url}
 \usepackage{fixltx2e}
 \usepackage{minted}
@@ -421,6 +421,9 @@ The front-end of the website uses the typical web technology stack: HTML / CSS /
 
 The connection with Facebook was realized with the help of RestFB - a simple Facebook Graph API written in Java \cite{restfb}.
 
+\hbox{}
+[TODO Neo4j java libraries]
+
 \subsubsection{Database}
 
 Because of the specificity of social relations, i.e. many connections between entities, classical relational databases are not the best choice for modelling such data. Therefore, in order to ensure good performance and scalability, a graph database Neo4j \cite{neo4j} was chosen for data storage.
@@ -444,7 +447,13 @@ The web application consists of 3 main parts:
 \end{itemize}
 
 \subsubsection{The login}
-[{\bf schemat login flow?}]
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{login_flow.png} 
+\caption[Login flow.]{Login flow [TODO poprawić ten schemat].}
+\label{fig.login_flow}
+\end{figure}
 
 Upon entering the website, the user is presented with the login screen, shown in Figure \ref{fig.login}. The top panel contains two buttons: "About", which opens up a popup with additional information on the project, and "Report problem", which leads to a form created in Google Forms for submitting any issues with the application.
 
@@ -525,11 +534,14 @@ A button at the bottom reloads the page presenting products from the next catego
 
 \subsubsection{The recommender}
 
-In the second part of the project, when a user has logged in with Facebook, he/she is no longer redirected to the survey, but instead is presented with the main store page. The centerpiece of the page is the recommendations pane. In a real life situation this would be a typical storefront, with the "suggested items" block located on top of the page or somewhere to the side.
+% In the second stage of the project, with the initial user base ready, a new visitor is presented with the recommendations page after login.
+
+% In the second part of the project, when a user has logged in with Facebook, he/she is no longer redirected to the survey, but instead is presented with 
+In the second stage of the project, with the initial user base ready, a new visitor is presented with the main store page after login. The centerpiece of the page is the recommendations pane. In a real life situation this would be a typical storefront, with the "suggested items" block located on top of the page or somewhere to the side.
 
 One of the design goals was to make the recommender seamlessly integrate with any existing storefront. Even though the RS generates recommendations very quickly, within the time frame of a web request and response, the limiting factor is the social network user data fetching, which takes up a significant amount of time (several seconds, depending on the user). Moreover, if the system were to serve more users, the RS could operate slightly longer (though the impact would be much lower than in the case of a relational database).
 
-With that in mind, the recommendations presentation was designed to be asynchronous. When the store's main page has loaded, there is an AJAX request to the controller. It then repeatedly checks whether user data fetching has finished. When it is done the controller starts the RS and then sends its results back to the view (the web page). 
+With that in mind, the recommendations presentation was designed to be asynchronous. When the store's main page has loaded, an AJAX request is sent to the controller. It then repeatedly checks whether user data fetching has finished. When it is done the controller starts the RS and then sends its results back to the view (the web page). 
 
 [TODO może to trochę zmienimy, żeby to nie kontroler inicjował RS tylko jednak ten FBservice. W ten sposób rekomendacje nie będą "przekalkulowywane" ponownie przy każdym załadowaniu strony.]
 
@@ -543,7 +555,7 @@ As soon as the AJAX request has been sent, the user is presented with a "Generat
 \end{figure}
 
 \hbox{}
-Thanks to this design decision the RS processing does not slow down page loading and would not in any way hamper the user's experience with the store. This is crucial nowadays, as page loading time is one of the key factors for users, which tend to abandon sites that load too slowly.
+Thanks to this approach the RS processing does not slow down page loading and would not in any way hamper the user's experience with a real store. This is crucial nowadays, as page loading time is one of the key factors for users, which tend to abandon sites that load too slowly.
 
 \subsection{Facebook application configuration}
 The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
@@ -592,8 +604,9 @@ The project structure is typical for Spring, with the following main folders und
 
 The view containing the login page layout is \texttt{login.jsp}. It defines the layout with the use of HTML and by importing the appropriate CSS files. Some elements that are repeatable on many pages, such as the navigation bar or the footer, are defined in their own JSP files and included where necessary (an example is shown in Listing \ref{listing.jsp_include}).
 
+% frame=lines,
 \begin{listing}
-\inputminted[frame=lines,framesep=3mm]{jsp}{code_jsp_include.jsp}
+\inputminted[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{jsp}{code_jsp_include.jsp}
 \caption{Example of including repeatable JSP elements from files.}
 \label{listing.jsp_include}
 \end{listing}
@@ -603,7 +616,7 @@ All JSPs also import JavaScript libraries and can define their own JS code. In t
 In order to allow the users to log in, a Login Button social plugin was included. It is a custom HTML5 element that triggers the Facebook JavaScript SDK \texttt{login()} method when clicked. It accepts additional data as attributes of the HTML element. One of them is \texttt{scope}, where all permissions required from each user are defined. It is on this basis that this information can then be accessed from a user's profile. The login button declaration is depicted in Listing \ref{listing.login_button}.
 
 \begin{listing}
-\inputminted[frame=lines,framesep=3mm]{html}{code_login_button.html}
+\inputminted[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{html}{code_login_button.html}
 \caption{The Facebook login button declaration.}
 \label{listing.login_button}
 \end{listing}
@@ -611,7 +624,7 @@ In order to allow the users to log in, a Login Button social plugin was included
 Upon successful Facebook login the page form is submitted to the \texttt{Login\-Controller.java}. Method resposible for handling this POST request is \texttt{home\-Submit()} and its simplified version is shown in Listing \ref{listing.controller_login_homesubmit} to illustrate how controllers are built.
 
 \begin{listing}[!t]
-\inputminted[frame=lines,framesep=3mm]{java}{code_controller_login.java}
+\inputminted[framesep=2mm,fontsize=\footnotesize,bgcolor=gray!20]{java}{code_controller_login.java}
 \caption{\texttt{LoginController.java} fragment.}
 \label{listing.controller_login_homesubmit}
 \end{listing}
@@ -626,7 +639,7 @@ This data is used to create a user node in the database with the use of the \tex
 To access objects such as the aforementioned \texttt{GDBM} or \texttt{Facebook\-Service} the Spring's dependency injection mechanism is used. Instead of manually instantiating the objects, one only needs to append the \texttt{@Autowired} annotation to the field declaration, as presented in Listing \ref{listing.autowiring}. However, for this to be possible, the \texttt{app-context.xml} file should contain an XML element \texttt{context:\-component\--scan} configured to indicate packages that Spring should scan for the autowired dependencies.
 
 \begin{listing}
-\begin{minted}[frame=lines,framesep=3mm]{java}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{java}
 @Autowired
 private FacebookService facebookService;
 @Autowired
@@ -637,6 +650,8 @@ private GraphDBManager GDBM;
 \end{listing}
 
 [TODO? opisać FacebookService?]
+
+[TODO opisać API Neo4j, jak uzytkownicy i relacje sa tworzone]
 
 \subsubsection{The survey}
 
@@ -653,10 +668,51 @@ Analogically, the survey page is administered by \texttt{survey\-.jsp} and \text
 
 \subsubsection{The recommender}
 
+The main page of the store is defined in the \texttt{main\-.jsp} view and is handled by the \texttt{HomeController}.
+
+The class responsible for calculating the similarities is \texttt{User\-Similarity\-Processor}. Listing \ref{listing.find_similar_users} shows the method used to ...
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{java}
+public List<SimilarUser> findSimilarUsers(String userId, int howMany) {
+    List<SimilarUser> similarUsersSortedList = new ArrayList<>();
+    Map<String, SimilarUser> similarUsersMap = LinkedHashMap<>();
+
+    processCommonInterestsMap(GDBM.getOtherUsersWithRelationship(
+        GDBM.getUserNode(userId)), similarUsersMap);
+    similarUsersMap = sortUsersDescendingWithSimilarity(similarUsersMap);
+
+    int counter = 0;
+    for(Map.Entry<String, SimilarUser> entry : 
+        similarUsersMap.entrySet()) {
+        if(counter <= howMany) {
+            counter++;
+            SimilarUser user = entry.getValue();
+            user.userId = entry.getKey();
+            similarUsersSortedList.add(user);
+        } else break;
+    }
+    return similarUsersSortedList;
+}
+\end{minted}
+\caption{Method for finding similar users.}
+\label{listing.find_similar_users}
+\end{listing}
+
+\hbox{TODO}
+
 %
 \section{User data model in Neo4j}
 
 [TODO jakiś wstęp]
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{neo4j_data_model3.png} 
+% width=\textwidth
+\caption[Data model in Neo4j.]{Data model in Neo4j.}
+\label{fig.data_model}
+\end{figure}
 
 \subsection{Data constructs}
 
@@ -685,25 +741,64 @@ To start modelling a graph database, it is useful to employ an Entity-Relationsh
 
 The data model implemented in the project is presented in Figure \ref{fig.data_model}. The rectangles represent nodes, with labels in bold and properties below. Arrows linking nodes are the relationships, with the relationship types in bold and with optional properties.
 
-The node central to the model is the \textit{User} node which can be related to almost all other nodes, including itself. The nodes \textit{Gender}, \textit{City}, \textit{Religion}, \textit{PoliticalView} and \textit{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \textit{User} and \textit{City}, which is perfectly acceptable in graph databases. The \textit{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \textit{(User)-[LIKES]-(Page)} and \textit{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
+The node central to the model is the \texttt{User} node which can be related to almost all other nodes, including itself. The nodes \texttt{Gender}, \texttt{City}, \texttt{Religion}, \texttt{Political\-View} and \texttt{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \texttt{User} and \texttt{City}, which is perfectly acceptable in graph databases. The \texttt{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \texttt{(User)-[LIKES]-(Page)} and \texttt{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
 
-In the lower part of the schema there is the \textit{Product} node. It belongs to a \textit{ProductCategory} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \textit{RATES} relationship. 
+In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship. 
 
 [TODO? coś jeszcze?]
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\textwidth]{neo4j_data_model3.png} 
-% width=\textwidth
-\caption[Data model in Neo4j.]{Data model in Neo4j.}
-\label{fig.data_model}
-\end{figure}
-
 \section{Recommendation algorithm}
 
-- niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami\\
+% - niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami
 
--
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{recommendation_flow.png} 
+\caption[Recommendation flow.]{Recommendation flow. [TODO? Potencjalnie poprawić?]}
+\label{fig.recommendation_flow}
+\end{figure}
+
+The visual flowchart for the algorithm is presented in Figure \ref{fig.recommendation_flow}. It is based on a kNN (k Nearest Neighbours) Collaborative Filtering algorithm, however the neighbourhood selection process is different. Classically the neighbours are chosen on the basis of similarity to the active user in terms of past ratings of items. Yet in this case the active user has not yet rated any item, since the RS is designed to serve new users. Instead, the nearest neighbours will be chosen on the basis of their social profile similarity to the active user.
+
+\subsection{Neighbourhood selection}
+
+In order to choose the most similar users, each property of the user's social profile, represented as a relationship between nodes in the database, has been attributed a weight. If two users share the same property, their similarity will be increased by the weight. The exact values are illustrated in Table \ref{table.weights}.
+
+% \vspace{1cm}
+% %Simplest working example
+% \begin{center}
+% \begin{tabular}{ c c c }
+%   cell1 & cell2 & cell3 \\ 
+%   cell4 & cell5 & cell6 \\  
+%   cell7 & cell8 & cell9    
+% \end{tabular}
+% \end{center}
+
+
+\begin{table}[!h]
+\centering
+\caption{Relationship weights.}
+\label{table.weights}
+\vspace{3mm}
+\begin{tabular}{ll}
+\hline
+Relationship         & Weight \vspace{2mm} \\ \hline
+LIVES\_IN            & 3      \\ 
+WAS\_BORN\_IN        & 3      \\
+FOLLOWS\_RELIGION    & 5      \\
+HAS\_POLITICAL\_VIEW & 5      \\
+LIKES                & 1      \\
+KNOWS                & 20     \\
+IS\_OF\_GENDER       & 10     \vspace{2mm} \\ \hline
+\end{tabular}
+\end{table}
+
+The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{KNOWS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied.
+
+
+
+
+\subsection{Products recommendation}
 
 \chapter{Evaluation}
 
