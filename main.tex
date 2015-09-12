@@ -324,6 +324,37 @@ Moreover, this data model was customized in Neo4j to allow for two additional im
 \end{figure}
 \footnotetext{Image source: \cite{learning_neo4j}, p.35}
 
+\subsection{Cypher Query Language}
+
+Cypher is a declarative graph query language used to interact with the Neo4j database \cite{neo4j}. It is simple, yet can perform very complicated database queries. It focuses on \textit{what} to retrieve from a graph, not \textit{how} to do it, thus hiding the complexity from the user.
+
+The structure of Cypher queries is similar to that of SQL. They are built up using various clauses that can be chained together and pass their result sets to the next ones.
+
+The most basic clauses to read from the graph are:
+\begin{itemize}
+\item \texttt{MATCH}: The graph pattern to match.
+\item \texttt{WHERE}: Adds constraints to a pattern.
+\item \texttt{RETURN}: Defines what data to return from the query.
+\end{itemize}
+
+Clauses to update the graph:
+\begin{itemize}
+\item \texttt{CREATE} / \texttt{DELETE}: Create or delete nodes and relationships.
+\item \texttt{SET} / \texttt{REMOVE}: Set values to or remove properties of nodes and relationships. 
+\item \texttt{MERGE}: Match existing or create new nodes and patterns.
+\end{itemize}
+
+An example of a simple query is shown in Listing \ref{listing.cypher_sample1}. It returns all nodes with label \texttt{Vegetable} that the node with label \texttt{User} having the property "name" with value "Mike" is related to with the relationship type \texttt{LIKES}. In casual terms, it returns all vegetables that the user Mike likes.
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+MATCH (m:User {name:"Mike"})-[:LIKES]-(c:Vegetable)
+RETURN c
+\end{minted}
+\caption{A sample Cypher query.}
+\label{listing.cypher_sample1}
+\end{listing}
+
 \subsection{Comparison with relational and other NoSQL databases}
 
 % Why use a graph database? \cite{learning_neo4j}, p.37
@@ -342,9 +373,6 @@ That said, there are certain scenarios where graph databases greatly outperform 
 \item {\bf Intensive queries on live data}: Typically in order to deeply analyze the relational data, it must be duplicated, denormalized and processed by techniques such as Extract, Transform and Load (ETL) to yield query-specific representations. This is because the performance on a live database would be too poor and could slow the entire database. Graph databases, however, are able to handle such complex queries between a web request and a web response, making it applicable to real-time analytics.
 \item {\bf Path finding queries}: In graph databases, when looking for how two elements are interconnected, all that needs to be done is to apply a graph algorithm to a starting and an ending point. In the case of relational databases, one would have to explicitly state how to move from on table to another.
 \end{itemize}
-
-\hbox{}
-[TODO Cypher queries]
 
 % \subsubsection{Performance}
 
@@ -406,7 +434,7 @@ As a consequence, the new approach enables serving recommendations to new users 
 
 The only prerequisite for such a situation is that there exists a reasonable user base of the service. Moreover, the system needs to both possess the users' social network information and to know their preferences towards the system's items. Therefore, in a typical scenario of implementation in an existing service, first the social login and social information acquisition would be enabled. After a period of gathering the preferences of socially-logged users, via their item ratings, shopping/browsing history, comment analysis etc., the initial user base would be established. In the second phase, each new user could obtain recommendations. Obviously, the system will improve over time, as more and more users with social data and product preferences are in the database.
 
-\subsection{Solution plan \textit{[?]}}
+\subsection{Solution outline}
 
 The system implementation will be conducted in two stages.
 \begin{enumerate}
@@ -439,11 +467,193 @@ The hosting provider is Amazon Web Services (AWS). The Spring application runs o
 
 The Amazon Route 53, a DNS and Domain Name Registration service, was used to link the domain name to the EC2 instance's IP address.
 
-\section{Product selection (?)}
-[TODO]
+
+
+
+
+
+
+
+\section{User data model in Neo4j}
+
+[TODO jakiś wstęp]
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{neo4j_data_model3.png} 
+% width=\textwidth
+\caption[Data model in Neo4j.]{Data model in Neo4j.}
+\label{fig.data_model}
+\end{figure}
+
+\subsection{Data constructs}
+
+The Property Graph data model provides four main building blocks for storing data in Neo4j \cite{learning_neo4j}:
+\begin{itemize}
+\item {\bf Nodes}: store entity information.
+\item {\bf Relationships}: connect nodes to one another; they always have a type, a start and an end node, and a direction.
+\item {\bf Properties}: key-value pairs belonging to a node / relationship, describing its features.
+\item {\bf Labels}: describe the "type" of a node.
+\end{itemize}
+
+\subsection{Modelling}
+
+To start modelling a graph database, it is useful to employ an Entity-Relationship diagram, as in the case of relational systems \cite{learning_neo4j}. Next, the following information can be extracted from a domain description:
+\begin{itemize}
+\item entities -- from the nouns of the description
+\item properties -- from the adjectives of the description
+\item relationship -- from the verbs in the description
+\end{itemize}
+
+[TODO? przykład ER diagram, pokazanie że w GDB nie trzeba join tables? \cite{learning_neo4j}, pp. 77-79]
+
+[TODO? opisanie dobrych/złych praktyk modelowania? (\cite{learning_neo4j}, pp. 79-88)]
+
+\subsection{Reco4Social model}
+
+The data model implemented in the project is presented in Figure \ref{fig.data_model}. The rectangles represent nodes, with labels in bold and properties below. Arrows linking nodes are the relationships, with the relationship types in bold and with optional properties.
+
+The node central to the model is the \texttt{User} node which can be related to almost all other nodes, including itself. The nodes \texttt{Gender}, \texttt{City}, \texttt{Religion}, \texttt{Political\-View} and \texttt{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \texttt{User} and \texttt{City}, which is perfectly acceptable in graph databases. The \texttt{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \texttt{(User)-[LIKES]-(Page)} and \texttt{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
+
+In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship. 
+
+[TODO? coś jeszcze?]
+
+\section{Recommendation algorithm}
+
+% - niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{recommendation_flow.png} 
+\caption[Recommendation flow.]{Recommendation flow. [TODO? Potencjalnie poprawić?]}
+\label{fig.recommendation_flow}
+\end{figure}
+
+The visual flowchart for the algorithm is presented in Figure \ref{fig.recommendation_flow}. It is based on a kNN (k Nearest Neighbours) Collaborative Filtering algorithm, however the neighbourhood selection process is different. Classically the neighbours are chosen on the basis of similarity to the active user in terms of past ratings of items. Yet in this case the active user has not rated any item, since the RS is designed to serve new users. Instead, the nearest neighbours will be chosen on the basis of their social profile similarity to the active user.
+
+\subsection{Neighbourhood selection}
+
+In order to calculate user similarity, each property of the user's social profile, represented as a relationship between nodes in the database, has been attributed a weight. If two users share the same property, their similarity will be increased by the weight. The exact values are illustrated in Table \ref{table.weights}.
+
+% \vspace{1cm}
+% %Simplest working example
+% \begin{center}
+% \begin{tabular}{ c c c }
+%   cell1 & cell2 & cell3 \\ 
+%   cell4 & cell5 & cell6 \\  
+%   cell7 & cell8 & cell9    
+% \end{tabular}
+% \end{center}
+
+
+\begin{table}[!h]
+\centering
+\caption{Relationship weights.}
+\label{table.weights}
+\vspace{3mm}
+\begin{tabular}{ll}
+\hline
+Relationship         & Weight \vspace{2mm} \\ \hline
+\texttt{LIVES\_IN}            & 3      \\ 
+\texttt{WAS\_BORN\_IN}        & 3      \\
+\texttt{FOLLOWS\_RELIGION}    & 5      \\
+\texttt{HAS\_POLITICAL\_VIEW} & 5      \\
+\texttt{IS\_OF\_GENDER}       & 10     \\
+\texttt{LIKES}                & 1      \\
+\texttt{KNOWS}                & 1      \vspace{2mm} \\
+\texttt{ARE\_FRIENDS}         & 20     \vspace{2mm} \\ \hline
+\end{tabular}
+\end{table}
+
+The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{ARE\_FRIENDS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied. [TODO poprawić to, niezgrabne]
+
+To find the common relationships between the active user and others, the Cypher query presented in Listing \ref{listing.cypher_users_common} was used. The \texttt{\{active\-User\}} is replaced in the code with the appropriate \texttt{User} object. Because all user relationships in the data model, apart from \texttt{RATES}, represent his social profile, the query omits this one irrelevant relationship.
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+MATCH (m:User)-[r1]-(k)-[r2]-(n:User)
+WHERE m={activeUser} AND NOT type(r1)="RATES" AND type(r1)=type(r2) 
+RETURN n.UID AS userId, type(r1) AS relType
+\end{minted}
+\caption{Cypher query for finding the common relationships between the active user and others.}
+\label{listing.cypher_users_common}
+\end{listing}
+
+In order to find all those that the active user is friends with, a different query is needed, presented in Listing \ref{listing.cypher_users_friends}. To differentiate between the situation where two users have common friends (\texttt{KNOWS}) the query will return a new, fake type of relationship -- \texttt{ARE\_FRIENDS} -- just for the purpose of user similarity evaluation.
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+MATCH (m:User)-[r]-(n:User)
+WHERE m={activeUser} AND type(r)="KNOWS"
+RETURN n.UID AS userId, "ARE_FRIENDS" AS relType
+\end{minted}
+\caption{Cypher query for finding friends of the active user.}
+\label{listing.cypher_users_friends}
+\end{listing}
+
+The result of the two queries is a list of key-value pairs of user IDs and relationship types. It is worth noting that the actual node to which a relationship points is not important at all. For instance, the system does not care what the item that both users like is -- the only information that matters is the type of the relationship (in this case: \texttt{LIKES}) and the similarity weight value that this entails.
+
+\hbox{}
+The next step is to sum the weights of all common relationships with each user. To illustrate this, let us investigate a simple example. Table \ref{table.sample_rels} shows a sample output of the above Cypher queries. There are two users similar to the active user, with IDs "1" and "2". The relationships common with the active user are listed in the "relType" column. To calculate the similarities, we refer to Table \ref{table.weights} for weights and sum them up for each user. This yields:
+
+\mint[fontsize=\footnotesize]{vim}|User 1: ARE_FRIENDS[20] + WAS_BORN_IN[3] + IS_OF_GENDER[10] + LIKES[1] = 34|
+
+\mint[fontsize=\footnotesize]{vim}|User 2: ARE_FRIENDS[20] + KNOWS[1] + KNOWS[1] + LIKES[1] = 23|
+
+Therefore we conclude that, with respect to the active user, User 1 has the similarity value of 34, which makes him a closer neighbour than User 2 with similarity value of 23.
+
+\begin{table}[!h]
+\centering
+\caption{Sample common relationships.}
+\label{table.sample_rels}
+\vspace{3mm}
+\begin{tabular}{ll}
+\hline
+userId         & relType \vspace{2mm} \\ \hline
+1       & \texttt{ARE\_FRIENDS}                  \\ 
+1       & \texttt{WAS\_BORN\_IN}              \\
+1       & \texttt{IS\_OF\_GENDER}       \\
+1       & \texttt{LIKES}      \\
+2       & \texttt{ARE\_FRIENDS}          \\
+2       & \texttt{KNOWS}       \\
+2       & \texttt{KNOWS}            \\
+2       & \texttt{LIKES}              \vspace{2mm} \\ \hline
+\end{tabular}
+\end{table}
+
+Finally, when all similarity values have been calculated, the users are sorted descendingly with respect to those values and K users at the top of the list are selected for the products recommendation (K nearest neighbours).
+
+\subsection{Products recommendation}
+
+Having the list of K similar users, for each one their highest rated products are chosen. The definition of what counts as "highly rated" is ambiguous, therefore a~variable \texttt{ratingLowest} has been introduced. As the name suggests, it defines a~threshold -- only products rated by a neighbour equally or higher will be considered for recommendation. The products selected from each neighbour are scanned and added to a global collection, each time preserving the rating and neighbour's similarity to the active user.
+
+Another filtering parameter is \texttt{minNumOfRatings}, which defines how many of the neighbours had to highly rate a product before it can be recommended. It has been introduced to enable control of suggesting unpopular items. 
+
+Next, all remaining products are subjected to suggested rating computation. This is the system's evaluation of how it "thinks" the active user would rate these items. To account for neighbourhood similarity the RS calculates a weighted average of each product's ratings and corresponding user similarity values. The formula is presented in Equation \ref{eq.ratings_weighted}, with the $sim(u,u')$ representing the similarity value between the active user $u$ and a neighbour $u'$ belonging to the set of neighbours $U$, and the $r_{u'i}$ being the neighbour's rating of item $i$.
+
+\begin{equation}
+\hat{r}_{ui} = \frac{1}{\displaystyle\sum_{u' \in U} |sim(u,u')|} \left(\displaystyle\sum_{u' \in U} sim(u,u')\cdot r_{u'i}\right)
+\label{eq.ratings_weighted}
+\end{equation}
+
+In the end the obtained predictions are rounded to integer values, sorted in a descending order and returned in a collection to the module that initiated the process (the recommendation controller or the recommendations validator).
+
+
+
+
+
+
+
+\section{Product selection and user data gathering}
+The goal of the product catalog presented to the users was on the one hand to be diverse enough so that everyone could find something that suits them, but on the other hand to be concise enough so the data for the recommender system would not be too scarce.
+
+To balance these two requirements the products could not have been obtained by simply crawling web stores with an automated program, but instead they had to be hand-picked. Most of the products come from Amazon, but also from other existing e-commerce websites. They have been divided in 15 categories, with around 20 products in each category. The obligatory information about each product includes the name and the URL of an image. In some cases other data has also been collected, such as description, price and the URL of the offer.
+
+The test users for the application were recruited among my friends on Facebook. In the end 107 users have logged in to Reco4Social. Unfortunately some of them either blocked access to their social profile information or did not complete the survey. They had to filtered out in order not to obstruct the results. In the end the user base consisted of 90 users.
 
 \section{Web application and social login}
-\subsection{Design [ew. inna nazwa]}
+\subsection{Design}
 
 The web application consists of 3 main parts:
 \begin{itemize}
@@ -674,17 +884,19 @@ Analogically, the survey page is administered by \texttt{survey\-.jsp} and \text
 
 \subsubsection{The recommender}
 
-The main page of the store is defined in the \texttt{main\-.jsp} view and is handled by the \texttt{HomeController}.
+The main page of the store is defined in the \texttt{main\-.jsp} view and is handled by the \texttt{HomeController}. When the view has loaded, it requests the controller for recommendations, which in turn initiates the RS.
 
-The class responsible for calculating the similarities is \texttt{User\-Similarity\-Processor}. Listing \ref{listing.find_similar_users} shows the method used to ...
+The class responsible for calculating the similarities is \texttt{User\-Similarity\-Processor}. Listing \ref{listing.find_similar_users} shows the method \texttt{find\-Similar\-Users()} used to find K nearest neighbours of a user. It invokes methods from \texttt{GraphDB\-Manager} which performs relevant queries on the database to find all similarities between the active user and others. The \texttt{process\-Common\-Interests\-Map()} method then sums the weights of all common relationships. Finally the users are sorted descending with similarity and are limited to K nearest neighbours.
 
-\begin{listing}
+\begin{listing}[!h]
 \begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{java}
 public List<SimilarUser> findSimilarUsers(String userId, int howMany) {
     List<SimilarUser> similarUsersSortedList = new ArrayList<>();
     Map<String, SimilarUser> similarUsersMap = LinkedHashMap<>();
 
     processCommonInterestsMap(GDBM.getOtherUsersWithRelationship(
+        GDBM.getUserNode(userId)), similarUsersMap);
+    processCommonInterestsMap(GDBM.getOtherUsersFriendship(
         GDBM.getUserNode(userId)), similarUsersMap);
     similarUsersMap = sortUsersDescendingWithSimilarity(similarUsersMap);
 
@@ -700,178 +912,28 @@ public List<SimilarUser> findSimilarUsers(String userId, int howMany) {
     }
     return similarUsersSortedList;
 }
+
+public void processCommonInterestsMap(Map<String, Map<String,AtomicInteger>>
+    commonInterestsMap, Map<String, SimilarUser> similarUsersMap) {
+    commonInterestsMap.forEach((userId, relMap) -> {
+        SimilarUser user = createSimilarUserIfNotExistsAndPutIntoMap(
+            similarUsersMap, userId);
+        relMap.forEach((relName, count) -> {
+            double similarityWeight = GraphConstants.similarityWeights.get(
+                GraphConstants.RelTypes.valueOf(relName));
+            user.similaritySum += similarityWeight * count.intValue();
+        });
+    });
+}
 \end{minted}
-\caption{Method for finding similar users. [TODO? czy to tutaj?]}
+\caption{Method for finding similar users.}
 \label{listing.find_similar_users}
 \end{listing}
 
-\hbox{TODO}
+With that data the \texttt{ProductRecommender} component starts generating recommendations according to the algorithm. When finished, the list of products with suggested ratings is sent back to the view via the controller and shown to the active user.
 
 %
-\section{User data model in Neo4j}
 
-[TODO jakiś wstęp]
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\textwidth]{neo4j_data_model3.png} 
-% width=\textwidth
-\caption[Data model in Neo4j.]{Data model in Neo4j.}
-\label{fig.data_model}
-\end{figure}
-
-\subsection{Data constructs}
-
-The Property Graph data model provides four main building blocks for storing data in Neo4j \cite{learning_neo4j}:
-\begin{itemize}
-\item {\bf Nodes}: store entity information.
-\item {\bf Relationships}: connect nodes to one another; they always have a type, a start and an end node, and a direction.
-\item {\bf Properties}: key-value pairs belonging to a node / relationship, describing its features.
-\item {\bf Labels}: describe the "type" of a node.
-\end{itemize}
-
-\subsection{Modelling}
-
-To start modelling a graph database, it is useful to employ an Entity-Relationship diagram, as in the case of relational systems \cite{learning_neo4j}. Next, the following information can be extracted from a domain description:
-\begin{itemize}
-\item entities -- from the nouns of the description
-\item properties -- from the adjectives of the description
-\item relationship -- from the verbs in the description
-\end{itemize}
-
-[TODO? przykład ER diagram, pokazanie że w GDB nie trzeba join tables? \cite{learning_neo4j}, pp. 77-79]
-
-[TODO? opisanie dobrych/złych praktyk modelowania? (\cite{learning_neo4j}, pp. 79-88)]
-
-\subsection{Reco4Social model}
-
-The data model implemented in the project is presented in Figure \ref{fig.data_model}. The rectangles represent nodes, with labels in bold and properties below. Arrows linking nodes are the relationships, with the relationship types in bold and with optional properties.
-
-The node central to the model is the \texttt{User} node which can be related to almost all other nodes, including itself. The nodes \texttt{Gender}, \texttt{City}, \texttt{Religion}, \texttt{Political\-View} and \texttt{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \texttt{User} and \texttt{City}, which is perfectly acceptable in graph databases. The \texttt{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \texttt{(User)-[LIKES]-(Page)} and \texttt{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
-
-In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship. 
-
-[TODO? coś jeszcze?]
-
-\section{Recommendation algorithm}
-
-% - niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{recommendation_flow.png} 
-\caption[Recommendation flow.]{Recommendation flow. [TODO? Potencjalnie poprawić?]}
-\label{fig.recommendation_flow}
-\end{figure}
-
-The visual flowchart for the algorithm is presented in Figure \ref{fig.recommendation_flow}. It is based on a kNN (k Nearest Neighbours) Collaborative Filtering algorithm, however the neighbourhood selection process is different. Classically the neighbours are chosen on the basis of similarity to the active user in terms of past ratings of items. Yet in this case the active user has not rated any item, since the RS is designed to serve new users. Instead, the nearest neighbours will be chosen on the basis of their social profile similarity to the active user.
-
-\subsection{Neighbourhood selection}
-
-In order to calculate user similarity, each property of the user's social profile, represented as a relationship between nodes in the database, has been attributed a weight. If two users share the same property, their similarity will be increased by the weight. The exact values are illustrated in Table \ref{table.weights}.
-
-% \vspace{1cm}
-% %Simplest working example
-% \begin{center}
-% \begin{tabular}{ c c c }
-%   cell1 & cell2 & cell3 \\ 
-%   cell4 & cell5 & cell6 \\  
-%   cell7 & cell8 & cell9    
-% \end{tabular}
-% \end{center}
-
-
-\begin{table}[!h]
-\centering
-\caption{Relationship weights.}
-\label{table.weights}
-\vspace{3mm}
-\begin{tabular}{ll}
-\hline
-Relationship         & Weight \vspace{2mm} \\ \hline
-\texttt{LIVES\_IN}            & 3      \\ 
-\texttt{WAS\_BORN\_IN}        & 3      \\
-\texttt{FOLLOWS\_RELIGION}    & 5      \\
-\texttt{HAS\_POLITICAL\_VIEW} & 5      \\
-\texttt{IS\_OF\_GENDER}       & 10     \\
-\texttt{LIKES}                & 1      \\
-\texttt{KNOWS}                & 1      \vspace{2mm} \\
-\texttt{ARE\_FRIENDS}         & 20     \vspace{2mm} \\ \hline
-\end{tabular}
-\end{table}
-
-The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{ARE\_FRIENDS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied. [TODO poprawić to, niezgrabne]
-
-To find the common relationships between the active user and others, the Cypher query presented in Listing \ref{listing.cypher_users_common} was used. The \texttt{\{active\-User\}} is replaced in the code with the appropriate \texttt{User} object. Because all user relationships in the data model, apart from \texttt{RATES}, represent his social profile, the query omits this one irrelevant relationship.
-
-\begin{listing}
-\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
-MATCH (m:User)-[r1]-(k)-[r2]-(n:User)
-WHERE m={activeUser} AND NOT type(r1)="RATES" AND type(r1)=type(r2) 
-RETURN n.UID AS userId, type(r1) AS relType
-\end{minted}
-\caption{Cypher query for finding the common relationships between the active user and others.}
-\label{listing.cypher_users_common}
-\end{listing}
-
-In order to find all those that the active user is friends with, a different query is needed, presented in Listing \ref{listing.cypher_users_friends}. To differentiate between the situation where two users have common friends (\texttt{KNOWS}) the query will return a new, fake type of relationship -- \texttt{ARE\_FRIENDS} -- just for the purpose of user similarity evaluation.
-
-\begin{listing}
-\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
-MATCH (m:User)-[r]-(n:User)
-WHERE m={activeUser} AND type(r)="KNOWS"
-RETURN n.UID AS userId, "ARE_FRIENDS" AS relType
-\end{minted}
-\caption{Cypher query for finding friends of the active user.}
-\label{listing.cypher_users_friends}
-\end{listing}
-
-The result of the two queries is a list of key-value pairs of user IDs and relationship types. It is worth noting that the actual node to which a relationship points is not important at all. For instance, the system does not care what the item that both users like is -- the only information that matters is the type of the relationship (in this case: \texttt{LIKES}) and the similarity weight value that this entails.
-
-\hbox{}
-The next step is to sum the weights of all common relationships with each user. To illustrate this, let us investigate a simple example. Table \ref{table.sample_rels} shows a sample output of the above Cypher queries. There are two users similar to the active user, with IDs "1" and "2". The relationships common with the active user are listed in the "relType" column. To calculate the similarities, we refer to Table \ref{table.weights} for weights and sum them up for each user. This yields:
-
-\mint[fontsize=\footnotesize]{vim}|User 1: ARE_FRIENDS[20] + WAS_BORN_IN[3] + IS_OF_GENDER[10] + LIKES[1] = 34|
-
-\mint[fontsize=\footnotesize]{vim}|User 2: ARE_FRIENDS[20] + KNOWS[1] + KNOWS[1] + LIKES[1] = 23|
-
-Therefore we conclude that, with respect to the active user, User 1 has the similarity value of 34, which makes him a closer neighbour than User 2 with similarity value of 23.
-
-\begin{table}[!h]
-\centering
-\caption{Sample common relationships.}
-\label{table.sample_rels}
-\vspace{3mm}
-\begin{tabular}{ll}
-\hline
-userId         & relType \vspace{2mm} \\ \hline
-1       & \texttt{ARE\_FRIENDS}                  \\ 
-1       & \texttt{WAS\_BORN\_IN}              \\
-1       & \texttt{IS\_OF\_GENDER}       \\
-1       & \texttt{LIKES}      \\
-2       & \texttt{ARE\_FRIENDS}          \\
-2       & \texttt{KNOWS}       \\
-2       & \texttt{KNOWS}            \\
-2       & \texttt{LIKES}              \vspace{2mm} \\ \hline
-\end{tabular}
-\end{table}
-
-Finally, when all similarity values have been calculated, the users are sorted descendingly with respect to those values and K users at the top of the list are selected for the products recommendation (K nearest neighbours).
-
-\subsection{Products recommendation}
-
-Having the list of K similar users, for each one their highest rated products are chosen. The definition of what counts as "highly rated" is ambiguous, therefore a~variable \texttt{ratingLowest} has been introduced. As the name suggests, it defines a~threshold -- only products rated by a neighbour equally or higher will be considered for recommendation. The products selected from each neighbour are scanned and added to a global collection, each time preserving the rating and neighbour's similarity to the active user.
-
-Another filtering parameter is \texttt{minNumOfRatings}, which defines how many of the neighbours had to highly rate a product before it can be recommended. It has been introduced to enable control of suggesting unpopular items. 
-
-Next, all remaining products are subjected to suggested rating computation. This is the system's evaluation of how it "thinks" the active user would rate these items. To account for neighbourhood similarity the RS calculates a weighted average of each product's ratings and corresponding user similarity values. The formula is presented in Equation \ref{eq.ratings_weighted}, with the $sim(u,u')$ representing the similarity value between the active user $u$ and a neighbour $u'$ belonging to the set of neighbours $U$, and the $r_{u'i}$ being the neighbour's rating of item $i$.
-
-\begin{equation}
-\hat{r}_{ui} = \frac{1}{\displaystyle\sum_{u' \in U} |sim(u,u')|} \left(\displaystyle\sum_{u' \in U} sim(u,u')\cdot r_{u'i}\right)
-\label{eq.ratings_weighted}
-\end{equation}
-
-In the end the obtained predictions are rounded to integer values, sorted in a descending order and returned in a collection to the module that initiated the process (the recommendation controller or the recommendations validator).
 
 \chapter{Evaluation}
 
@@ -885,7 +947,8 @@ In the end the obtained predictions are rounded to integer values, sorted in a d
 
 \subsection{Ratings prediction accuracy}
 
-Prediction accuracy is the most popular metric in the recommendation system literature \cite{eval_microsoft}. It defines how correct are the recommendation results compared to real user data. For this a test user base with ratings is needed. 
+Prediction accuracy is the most popular metric in the recommendation system literature \cite{eval_microsoft}. It defines how correct the recommendation results are compared to real user data. 
+% For this a test user base with ratings is needed. 
 
 There are two main measures of prediction accuracy which were used in testing Reco4Social:
 \begin{itemize}
@@ -908,15 +971,13 @@ MAE = \frac{1}{|N|} \displaystyle\sum_{(u,i) \in N} |\hat{r}_{ui} - r_{ui}|
 \end{equation}
 \hbox{}
 
-Evaluation was performed by calculating RMSE and MAE for each user in the database. This is effectively a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
-
-[TODO wyniki + opis]
+Both RMSE and MAE describe the error in the same units as the computed values, i.e. and RMSE=1 means that on average the system's predicted rating was off by 1 with respect to the real rating. Moreover, RMSE uses the squared deviations and thus emphasises larger errors in comparison to MAE.
 
 \subsection{Classification accuracy}
 
 This is an accuracy metrics that measures how well the system can classify items as relevant or not \cite{eval_twente}. The magnitude of the error between the predicted and real rating is ignored.
 
-There are two dominant measures, precision and recall. Precision is the ratio of relevant items selected to the number of items selected. It would be easy to recommend many items and count on the fact that some of them might interest the user. The goal is, however, to show only the important items. The higher the recall, the better the RS in this regard. The formula for precision calculation is presented in Equation \ref{eq.precision}, where $B_{rs}$ represents the relevant selected items and $B_s$ stands for all the selected items.
+There are two dominant measures, precision and recall. {\bf Precision} is the ratio of relevant items selected to the number of all selected items. It would be easy to recommend many items and count on the fact that some of them might interest the user. The goal is, however, to show only the important items. The higher the precision, the better the RS in this regard. The formula for precision calculation is presented in Equation \ref{eq.precision}, where $B_{rs}$ represents the relevant selected items and $B_s$ stands for all the selected items.
 
 \begin{equation}
 Precision = \frac{|B_{rs}|}{|B_{s}|}
@@ -924,7 +985,7 @@ Precision = \frac{|B_{rs}|}{|B_{s}|}
 \end{equation}
 \hbox{}
 
-Recall, on the other hand, represents the ratio between the number of relevant items selected and the total number of relevant items $B_r$. It illustrates how many of all items interesting to the user was the system capable of finding. Equation \ref{eq.recall} depicts recall.
+{\bf Recall}, on the other hand, represents the ratio between the number of relevant items selected and the total number of relevant items $B_r$. It illustrates how many of all items interesting to the user was the system capable of finding. Equation \ref{eq.recall} shows the formula for recall calculation.
 
 \begin{equation}
 Recall = \frac{|B_{rs}|}{|B_{r}|}
@@ -932,13 +993,14 @@ Recall = \frac{|B_{rs}|}{|B_{r}|}
 \end{equation}
 \hbox{}
 
-In order to find precision and recall, the notion of relevance has to be defined. For the purpose of this evaluation two approaches were employed:
-\begin{itemize}
-\item considering all items rated by the user 4-5 as relevant, and all those rated 1-3 as non relevant
-\item calculating the average rating for each user (for all products) and using it as a threshold -- all items rated below are not relevant and all those rated above are relevant.
-\end{itemize}
+In order to find precision and recall, the notion of relevance has to be defined. For the purpose of this evaluation the following approach was used: considering all items rated by the user 4-5 as relevant, and all those rated 1-3 as non relevant. The items that were not rated at all are ignored.
+% For the purpose of this evaluation two approaches were employed:
+% \begin{itemize}
+% \item considering all items rated by the user 4-5 as relevant, and all those rated 1-3 as non relevant
+% \item calculating the average rating for each user (for all products) and using it as a threshold -- all items rated below are not relevant and all those rated above are relevant.
+% \end{itemize}
 
-It has been shown that precision and recall are related -- when one increases, the other decreases. There exist methods that take both of them into account and produce a single metric. The most popular is the F-measure, illustrated in Equation \ref{eq.fmeasure}, which is a harmonic mean of precision and recall. The results are on a scale from 0 (worst) to 1 (best).
+It has been shown that precision and recall are related -- when one increases, the other decreases. There exist methods that take both of them into account and produce a single metric. The most popular is the {\bf F-measure}, illustrated in Equation \ref{eq.fmeasure}, which is a harmonic mean of precision and recall. The results are on a scale from 0 (worst) to 1 (best).
 
 \begin{equation}
 F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
@@ -946,12 +1008,45 @@ F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
 \end{equation}
 \hbox{}
 
-[TODO wyniki + opis]
+\subsection{Results}
+
+The evaluation was performed by calculating RMSE, MAE, Precision, Recall and F-measure for each user in the database. This approach represents a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
+
+Moreover, this process was repeated for varying values of \texttt{K} and \texttt{minNumOf\-Ratings} -- both in the range from 1 to 10. The \texttt{ratingLowest} has been set to 4 as the threshold for relevancy.
+
+The detailed test results can be found in Appendix 1 [TODO? tak, czy dać tylko tu wybrane i już?] and the selected best results are presented in Table \ref{table.results}.
+
+\begin{table}[!h]
+\centering
+\caption{Selected test results.}
+\label{table.results}
+\vspace{3mm}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+K  & minNumOfRatings  & RMSE         & MAE          & Recall       & Precision    & F-measure     \\ \hline
+4  & 4  & {\bf 0.7842} & {\bf 0.6007} & 0.0736       & 0.3229       & 0.1087       \\ \hline
+6  & 5  & {\bf 0.7716} & {\bf 0.5911} & 0.0680       & 0.3535       & 0.1005       \\ \hline
+8  & 3  & 1.5215       & 1.1414       & 0.4704       & 0.2669       & {\bf 0.3068} \\ \hline
+10 & 1  & 1.8199       & 1.4280       & {\bf 0.9006} & 0.1617       & 0.2602       \\ \hline
+10 & 3  & 1.5696       & 1.1825       & 0.5568       & 0.2502       & {\bf 0.3165} \\ \hline
+10 & 6  & 1.0631       & 0.8216       & 0.1342       & {\bf 0.3564} & 0.1651       \\ \hline
+\end{tabular}
+\end{table}
+
+The general trend of how the parameters vary within a constant \texttt{K} and a changing \texttt{minNumOfRatings} is depicted in Figure \ref{fig.results_chart_k-8} for \texttt{K}=8.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{results_chart_k-8.png} 
+\caption[Results for K=8.]{Results for K=8.}
+\label{fig.results_chart_k-8}
+\end{figure}
 
 \section{Evaluation of computation time and resource consumption}
 \section{Comparison to non-social recommender systems}
 
 \chapter{Summary and conclusions}
+\section{Conclusions}
 \section{Usability of the project in AMG.net/Atos}
 \section{Future development perspectives}
 
@@ -1034,3 +1129,4 @@ Web page of \textit{jQuery Raty}, Available at: \url{http://wbotelhos.com/raty},
 \listoftables
 
 \end{document}
+
