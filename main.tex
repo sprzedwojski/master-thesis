@@ -343,6 +343,9 @@ That said, there are certain scenarios where graph databases greatly outperform 
 \item {\bf Path finding queries}: In graph databases, when looking for how two elements are interconnected, all that needs to be done is to apply a graph algorithm to a starting and an ending point. In the case of relational databases, one would have to explicitly state how to move from on table to another.
 \end{itemize}
 
+\hbox{}
+[TODO Cypher queries]
+
 % \subsubsection{Performance}
 
 % \subsubsection{Flexibility}
@@ -435,6 +438,9 @@ The application is hosted online at the URL: \url{http://store.przedwojski.com/}
 The hosting provider is Amazon Web Services (AWS). The Spring application runs on a Tomcat server along with an embedded Neo4j database. They are located on an Amazon Elastic Cloud Computing (EC2) micro instance running Linux AMI (Amazon Machine Image), a modified version of CentOS.
 
 The Amazon Route 53, a DNS and Domain Name Registration service, was used to link the domain name to the EC2 instance's IP address.
+
+\section{Product selection (?)}
+[TODO]
 
 \section{Web application and social login}
 \subsection{Design [ew. inna nazwa]}
@@ -695,7 +701,7 @@ public List<SimilarUser> findSimilarUsers(String userId, int howMany) {
     return similarUsersSortedList;
 }
 \end{minted}
-\caption{Method for finding similar users.}
+\caption{Method for finding similar users. [TODO? czy to tutaj?]}
 \label{listing.find_similar_users}
 \end{listing}
 
@@ -758,11 +764,11 @@ In the lower part of the schema there is the \texttt{Product} node. It belongs t
 \label{fig.recommendation_flow}
 \end{figure}
 
-The visual flowchart for the algorithm is presented in Figure \ref{fig.recommendation_flow}. It is based on a kNN (k Nearest Neighbours) Collaborative Filtering algorithm, however the neighbourhood selection process is different. Classically the neighbours are chosen on the basis of similarity to the active user in terms of past ratings of items. Yet in this case the active user has not yet rated any item, since the RS is designed to serve new users. Instead, the nearest neighbours will be chosen on the basis of their social profile similarity to the active user.
+The visual flowchart for the algorithm is presented in Figure \ref{fig.recommendation_flow}. It is based on a kNN (k Nearest Neighbours) Collaborative Filtering algorithm, however the neighbourhood selection process is different. Classically the neighbours are chosen on the basis of similarity to the active user in terms of past ratings of items. Yet in this case the active user has not rated any item, since the RS is designed to serve new users. Instead, the nearest neighbours will be chosen on the basis of their social profile similarity to the active user.
 
 \subsection{Neighbourhood selection}
 
-In order to choose the most similar users, each property of the user's social profile, represented as a relationship between nodes in the database, has been attributed a weight. If two users share the same property, their similarity will be increased by the weight. The exact values are illustrated in Table \ref{table.weights}.
+In order to calculate user similarity, each property of the user's social profile, represented as a relationship between nodes in the database, has been attributed a weight. If two users share the same property, their similarity will be increased by the weight. The exact values are illustrated in Table \ref{table.weights}.
 
 % \vspace{1cm}
 % %Simplest working example
@@ -783,22 +789,89 @@ In order to choose the most similar users, each property of the user's social pr
 \begin{tabular}{ll}
 \hline
 Relationship         & Weight \vspace{2mm} \\ \hline
-LIVES\_IN            & 3      \\ 
-WAS\_BORN\_IN        & 3      \\
-FOLLOWS\_RELIGION    & 5      \\
-HAS\_POLITICAL\_VIEW & 5      \\
-LIKES                & 1      \\
-KNOWS                & 20     \\
-IS\_OF\_GENDER       & 10     \vspace{2mm} \\ \hline
+\texttt{LIVES\_IN}            & 3      \\ 
+\texttt{WAS\_BORN\_IN}        & 3      \\
+\texttt{FOLLOWS\_RELIGION}    & 5      \\
+\texttt{HAS\_POLITICAL\_VIEW} & 5      \\
+\texttt{IS\_OF\_GENDER}       & 10     \\
+\texttt{LIKES}                & 1      \\
+\texttt{KNOWS}                & 1      \vspace{2mm} \\
+\texttt{ARE\_FRIENDS}         & 20     \vspace{2mm} \\ \hline
 \end{tabular}
 \end{table}
 
-The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{KNOWS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied.
+The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{ARE\_FRIENDS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied. [TODO poprawić to, niezgrabne]
 
+To find the common relationships between the active user and others, the Cypher query presented in Listing \ref{listing.cypher_users_common} was used. The \texttt{\{active\-User\}} is replaced in the code with the appropriate \texttt{User} object. Because all user relationships in the data model, apart from \texttt{RATES}, represent his social profile, the query omits this one irrelevant relationship.
 
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+MATCH (m:User)-[r1]-(k)-[r2]-(n:User)
+WHERE m={activeUser} AND NOT type(r1)="RATES" AND type(r1)=type(r2) 
+RETURN n.UID AS userId, type(r1) AS relType
+\end{minted}
+\caption{Cypher query for finding the common relationships between the active user and others.}
+\label{listing.cypher_users_common}
+\end{listing}
 
+In order to find all those that the active user is friends with, a different query is needed, presented in Listing \ref{listing.cypher_users_friends}. To differentiate between the situation where two users have common friends (\texttt{KNOWS}) the query will return a new, fake type of relationship -- \texttt{ARE\_FRIENDS} -- just for the purpose of user similarity evaluation.
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+MATCH (m:User)-[r]-(n:User)
+WHERE m={activeUser} AND type(r)="KNOWS"
+RETURN n.UID AS userId, "ARE_FRIENDS" AS relType
+\end{minted}
+\caption{Cypher query for finding friends of the active user.}
+\label{listing.cypher_users_friends}
+\end{listing}
+
+The result of the two queries is a list of key-value pairs of user IDs and relationship types. It is worth noting that the actual node to which a relationship points is not important at all. For instance, the system does not care what the item that both users like is -- the only information that matters is the type of the relationship (in this case: \texttt{LIKES}) and the similarity weight value that this entails.
+
+\hbox{}
+The next step is to sum the weights of all common relationships with each user. To illustrate this, let us investigate a simple example. Table \ref{table.sample_rels} shows a sample output of the above Cypher queries. There are two users similar to the active user, with IDs "1" and "2". The relationships common with the active user are listed in the "relType" column. To calculate the similarities, we refer to Table \ref{table.weights} for weights and sum them up for each user. This yields:
+
+\mint[fontsize=\footnotesize]{vim}|User 1: ARE_FRIENDS[20] + WAS_BORN_IN[3] + IS_OF_GENDER[10] + LIKES[1] = 34|
+
+\mint[fontsize=\footnotesize]{vim}|User 2: ARE_FRIENDS[20] + KNOWS[1] + KNOWS[1] + LIKES[1] = 23|
+
+Therefore we conclude that, with respect to the active user, User 1 has the similarity value of 34, which makes him a closer neighbour than User 2 with similarity value of 23.
+
+\begin{table}[!h]
+\centering
+\caption{Sample common relationships.}
+\label{table.sample_rels}
+\vspace{3mm}
+\begin{tabular}{ll}
+\hline
+userId         & relType \vspace{2mm} \\ \hline
+1       & \texttt{ARE\_FRIENDS}                  \\ 
+1       & \texttt{WAS\_BORN\_IN}              \\
+1       & \texttt{IS\_OF\_GENDER}       \\
+1       & \texttt{LIKES}      \\
+2       & \texttt{ARE\_FRIENDS}          \\
+2       & \texttt{KNOWS}       \\
+2       & \texttt{KNOWS}            \\
+2       & \texttt{LIKES}              \vspace{2mm} \\ \hline
+\end{tabular}
+\end{table}
+
+Finally, when all similarity values have been calculated, the users are sorted descendingly with respect to those values and K users at the top of the list are selected for the products recommendation (K nearest neighbours).
 
 \subsection{Products recommendation}
+
+Having the list of K similar users, for each one their highest rated products are chosen. The definition of what counts as "highly rated" is ambiguous, therefore a~variable \texttt{ratingLowest} has been introduced. As the name suggests, it defines a~threshold -- only products rated by a neighbour equally or higher will be considered for recommendation. The products selected from each neighbour are scanned and added to a global collection, each time preserving the rating and neighbour's similarity to the active user.
+
+Another filtering parameter is \texttt{minNumOfRatings}, which defines how many of the neighbours had to highly rate a product before it can be recommended. It has been introduced to enable control of suggesting unpopular items. 
+
+Next, all remaining products are subjected to suggested rating computation. This is the system's evaluation of how it "thinks" the active user would rate these items. To account for neighbourhood similarity the RS calculates a weighted average of each product's ratings and corresponding user similarity values. The formula is presented in Equation \ref{eq.ratings_weighted}, with the $sim(u,u')$ representing the similarity value between the active user $u$ and a neighbour $u'$ belonging to the set of neighbours $U$, and the $r_{u'i}$ being the neighbour's rating of item $i$.
+
+\begin{equation}
+\hat{r}_{ui} = \frac{1}{\displaystyle\sum_{u' \in U} |sim(u,u')|} \left(\displaystyle\sum_{u' \in U} sim(u,u')\cdot r_{u'i}\right)
+\label{eq.ratings_weighted}
+\end{equation}
+
+In the end the obtained predictions are rounded to integer values, sorted in a descending order and returned in a collection to the module that initiated the process (the recommendation controller or the recommendations validator).
 
 \chapter{Evaluation}
 
@@ -961,4 +1034,3 @@ Web page of \textit{jQuery Raty}, Available at: \url{http://wbotelhos.com/raty},
 \listoftables
 
 \end{document}
-
