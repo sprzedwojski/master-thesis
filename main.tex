@@ -204,7 +204,7 @@ In this thesis I will focus only on the Recommendations approach to social comme
 
 \section{Recommender Systems}
 
-\subsection{Title?}
+\subsection{Overview}
 
 Recommender Systems (RSs) are software tools and techniques generating recommendations for items that might be interesting to a user \cite{rec_sys_handbook}. "Item" is a general term referring to what the system can recommend. It can be almost anything, from movies to watch, music to listen to, products to buy, news to read etc.
 
@@ -223,7 +223,6 @@ In order to be able to suggest items, a RS must implement a way of predicting th
 
 The two most popular classes of recommender systems are {\bf content based} and {\bf collaborative filtering} RSs \cite{rec_sys_handbook}.
 
-% \subsubsection{Content based}
 \hbox{}
 {\bf Content based:} The recommended items are similar to the ones that the user liked in the past. Similarities between items are calculated on the basis of their features, e.g. in the case of movies it can be their genre, actors, director etc.
 
@@ -231,21 +230,35 @@ The advantage of such an approach is that there is no need for other users in th
 
 However the disadvantage is that all items need to be well characterised by features, which imposes constraints on item addition. Moreover, only items of the same category can be compared, as it is impossible to directly compare features of, e.g. a movie and a music album. Therefore this kind of system could not work well in a multi-category environment.
 
-% \subsubsection{Collaborative filtering}
 \hbox{}
-{\bf Collaborative filtering:} The idea is to recommend to the active user the items that other users with similar interests liked in the past. The similarity between two users is calculated on the basis of their past ratings of items. Then, if the RS finds that e.g. user B is most similar to the active user A, it will find items highly rated by B that A has not yet rated (thus probably does not know) and recommend them to user A.
+{\bf Collaborative filtering (CF):} The idea is to recommend to the active user the items that other users with similar interests liked in the past. The similarity between two users is calculated on the basis of their past ratings of items. Then, if the RS finds that e.g. user B is most similar to the active user A, it will find items highly rated by B that A has not yet rated (thus probably does not know) and recommend them to user A.
 
 This approach to RS allows for the items to be transparent to the system, i.e. it does not need to know what the items are nor what features, properties they have (as opposed to the content-based approach). It allows for greater flexibility when it comes to adding items.
 
 The drawback is that in order for the system to work, it needs a large user base with ratings. Moreover, if a new item is added in the course of the system's functioning, it will be available for recommendations only after some users have rated it.
 
 \hbox{}
-There exist other types of recommender systems...
+There exist other types of recommender systems, which will not be presented here in detail. There are also hybrid approaches that make use of multiple techniques to minimize the downsides of each individual RS. 
+Nevertheless, there is one more that stands out in the context of this thesis. A {\bf community-based} RS recommends items based on the preferences of the users friends. Studies have proven that people trust more the recommendations of friends than those of similar but unknown persons \cite{sinha}. Together with the rapid expansion of social networks this creates an increased interest in these community-based systems, also known as {\bf social recommender systems}. This type of RS operates on the users social graph, analyzing user friends and their preferences, expressed by their ratings.
 
-[TODO: opisać tutaj community-based (\cite{rec_sys_handbook}, p.13) jako podobny do mojego, ale bazujący tylko na znajomościach pobranych z SN, a nie na profilach użytkowników]
+The research about these systems is still in an early phase an the results are mixed \cite{rec_sys_handbook}. They do indicate though that social-network-based recommendations are very useful in certain situation, e.g. for cold-start problems. They also show that combining a social recommender with a traditional CF improves recommendation results.
+
+The main difference between these RSs and the one that is the topic of this thesis is that in the case of Reco4Social, frienship in a social network is only one of multiple criteria of user similarity. The others refer to similarities in taste, gender, religion, political view, geographical area etc. In this manner Reco4Social can be regarded as a crossover between a classical CF and a social recommender system.
+% a more comprehensive variant of a social recommender system.
 
 \subsection{Application}
-[TODO: \cite{rec_sys_handbook}, p.14]
+% [TODO: \cite{rec_sys_handbook}, p.14]
+
+Nowadays recommender systems are used in a variety of domains, some of which include:
+\begin{itemize}
+\item Entertainment -- recommendations for movies, music
+\item E-commerce -- suggestions of products to buy
+\item Social -- propositions of people on social networks that a user might now, potential partners on online dating sites
+\item Content -- interesting news, books, articles
+\item Services -- recommendations of restaurants, hotels, financial services, life insurance, travel destinations
+\end{itemize}
+
+The applications are limitless and in the world where we are increasingly more flooded with information the RSs will be growing in popularity in order to filter out irrelevant data, thus retaining the interest of users.
 
 \section{Graph databases}
 
@@ -1119,6 +1132,9 @@ Web page of an \textit{E-Commerce Template}, Bootply.com, Available at: \url{htt
 
 \bibitem{jquery_raty}
 Web page of \textit{jQuery Raty}, Available at: \url{http://wbotelhos.com/raty}, [access: 5 May 2015].
+
+\bibitem{sinha}
+Rashmi Sinha and Kirsten Swearingen, \textit{Comparing Recommendations Made by Online Systems and Friends}, SIMS, University of California, Available at: \url{http://www.ercim.eu/publication/ws-proceedings/DelNoe02/RashmiSinha.pdf}, [access: 13 September 2015].
 
 \end{thebibliography}
 
