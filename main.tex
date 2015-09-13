@@ -43,11 +43,12 @@
 %\bf - pogrubienie
 
 \chapter{Introduction} \label{rozdz.wstep} 
-In the age of ubiquitous Internet access more and more human activities take place in the Web. E-commerce, the act of shopping online, has been on the increase for many years. [{\bf tutaj jakies statystyki, dane nt udzialu ecommerce w ogolnej sprzedazy}]
+In the age of ubiquitous Internet access more and more human activities take place in the Web. E-commerce, the act of shopping online, has been on the increase for many years. Today virtually any retail business has an online store, and some are even created from ground up as purely e-commerce ventures with no real-world boutiques at all (e.g. Amazon).
 
-The amount of products offered on the Internet can be overwhelming for an average consumer, therefore companies take efforts to properly target users with relevant content. Correct product targeting directly translates to increased sales. [{\bf jakis reference}] Systems responsible for this are {\bf recommender systems}.
+The amount of products offered on the Internet can be overwhelming for an average consumer. The fast growth of new e-business services (buying products, product comparison, auctions) produced a vast choice, which, instead of increasing user happiness, started to decrease their well-being \cite{rec_sys_handbook}. Therefore companies take efforts to properly target users with relevant content. Correct product targeting directly translates to user satisfaction and increased sales, thus creating a "win-win" situation. Systems responsible for recommending relevant products to users are {\bf recommender systems}.
 
-In the last several years the world has witnessed the rise of social media - Internet-based applications enabling users to connect with each other and share various content. The principal services include Facebook, Twitter and LinkedIn. This phenomenon enabled large-scale user information gathering. That information can be shared with third parties (with user consent) and can be used by them to improve user experience. [{\bf doszlifowac}]
+In the last several years the world has witnessed the rise of social media - Internet-based applications enabling users to connect with each other and share various content. The principal services include Facebook, Twitter and LinkedIn. This phenomenon enabled large-scale user information gathering. These social networks enable third parties, such as e-commerce websites, to access user data (with user consent), which gives online businesses the tool to better understand users and provide them with even more relevant and personalized content.
+% That information can be shared with third parties (with user consent) and can be used by them to improve user experience. [{\bf doszlifowac}]
 
 The use of social media in e-commerce is commonly referred to as {\bf social commerce}. According to Lora Cecere of Altimeter Group \cite{rise_of_social_commerce}, "Social Commerce is the use of Social Technologies to connect, listen, understand and engage to improve the shopping experience."
 
@@ -61,20 +62,45 @@ The use of social media in e-commerce is commonly referred to as {\bf social com
 \section{Scope of work}
 The thesis involves the areas of software engineering, web development, systems integration and recommender systems.
 
-The aim of this thesis is to design and create a recommender system that leverages users' social media information to suggest products. 
+The aim of this thesis is to design, create and implement a social network recommender system (RS) that leverages users' social media information to eliminate two common problems found in classic RSs: cold-start and data sparsity. The created system has been given a working title "Reco4Social" and will be referred to by this name throughout the thesis.
 
-While there exist many recommender systems, most of them require initial information about user preferences regarding some part of data that the later recommended items come from. For example, if a user is to be recommended a movie to watch, the system needs either a history of movies the user has seen, his ratings on multiple movies etc. [{\bf dopracowac}] Next, this information can be processed in two ways:
+\hbox{}
+While there exist many recommender systems, most of them require initial information about user preferences regarding some part of data that the later recommended items come from. For example, if a user is to be recommended a movie to watch, the system needs either a history of movies the user has seen, his ratings on some movies etc. in order to be able to infer his preferences and extrapolate them to other items. 
+% Next, this information can be processed in two ways:
+% \begin{itemize}
+% \item collaborative filtering - based on item ratings, other users with similar tastes are found and items they like are proposed
+% \item content-based filtering - based on item ratings, items similar to the highest ranked items are found and proposed
+% \end{itemize}
+
+This limits the usage of RSs in the early stages of user-system interactions, when little to no information about the user is known. It translates itself to two main problems of recommender systems \cite{snrs}:
 \begin{itemize}
-\item collaborative filtering - based on item ratings, other users with similar tastes are found and items they like are proposed
-\item content-based filtering - based on item ratings, items similar to the highest ranked items are found and proposed
+\item {\bf Cold-start}: The system has no information about a new user, therefore it cannot accurately interpret the user's preferences and thus cannot provide good recommendations.
+\item {\bf Data sparsity}: Each user typically only rates a few items out of the large item database of a system. Therefore, the user/item rating matrix is usually very sparse and as result, the RS cannot reliably measure user similarities.
 \end{itemize}
 
+Reco4Social aims to eliminate the above problems by analyzing social profiles of new users and using this information for finding similar, existing users in the system, instead of matching them on the basis of previous ratings.
 
+\hbox{}
+Furthermore, with increased amount of data about users as well as growing number of products available on the Internet, there is a need for efficient processing of the data in real time. In traditional, relational databases, processing of such complex data is time and resource consuming. This is because such data is stored in multiple tables and the join operators become very complicated, using many join tables to connect the data. There is a limit to how many such join operations can be performed before the \textit{join bombs} occur and render the system unresponsive \cite{learning_neo4j}.
 
-Są już systemy rekomendacyjne, ale cierpią na 2 główne problemy: cold start i data sparsity. Tu można zaczerpnąć z \cite{snrs}, pp.1-2. 
-Wykorzystanie grafowej bazy danych, dobrze modelującej relacje społeczne.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{join_bomb.jpg} 
+\caption[Relational database schema with explosive join tables.]{Relational database schema with explosive join tables.\footnotemark{}}
+\label{fig.join_bomb}
+\end{figure}
 
-Osoba podejmująca tematykę stoi przed wyzwaniami: zbudować rzetelną bazę produktów, bazę użytkowników, przekonać użytkowników do udostępnienia danych osobowych etc.
+The solution to this is to use a graph database as the data store. It is designed to handle complex data relations and dependencies. Moreover, a graph database very naturally models human interests and interactions, which are dynamic and not rigidly structured as a relational database requires. Graph databases allow for flexibility in data modelling and do not impose any schema. They are also internally used by many companies, among them the social network giant -- Facebook \cite{facebook_social_graph}. 
+
+\footnotetext{Image source: \cite{learning_neo4j}, p.27}
+
+% \hbox{}
+% There are multiple challenges that will be faced in the course of this project. First, a reliable test user base will need to be created. For this a sample product catalog imitating a real store offer has to be created. Moreover, a web application allowing users to log in with 
+
+% Osoba podejmująca tematykę stoi przed wyzwaniami: zbudować rzetelną bazę produktów, bazę użytkowników, przekonać użytkowników do udostępnienia danych osobowych etc.
+
+\hbox{}
+
 
 Spodziewane efekty:\\
 - rzetelne rekomendacje tuż po zalogowaniu użytkownika\\
@@ -170,7 +196,7 @@ Social commerce is the fusion of social media with e-commerce \cite{social_comme
 
 The term itself was created by Yahoo! in 2005, referring to an online place where people can share opinions and experiences, find products and services and buy them. Nevertheless, the roots of such practices date back to 1995, when Amazon started encouraging customers to rate and review products they had purchased \cite{social_commerce_syzygy}.
 
-In the recent years, however, the popularization of social media services such as Facebook or Twitter has given rise to new social commerce tools and opportunities. Examples include social media stores, i.e. storefronts present directly on the social media sites, or portable social graphs, which give access to users' data to third parties. It is the latter that will be of interest to us in the context of this thesis.
+In the recent years, however, the popularization of social media services such as Facebook or Twitter has given rise to new social commerce tools and opportunities. Examples include social media stores, i.e. storefronts present directly on the social media sites or portable social graphs, which give access to users' data to third parties. It is the latter that will be of interest to us in the context of this thesis.
 
 % There are various tools and approaches in social commerce. Examples include social shopping, where we can chat with friends
 
@@ -215,7 +241,8 @@ What the RSs deal with are personalized recommendations. They can be seen as ran
 
 RSs are based on the observation that people tend to follow recommendations of others while making everyday decisions \cite{rec_sys_handbook}. Moreover, the second assumption is that if we have similar tastes to someone else, their recommendation would be more accurate than that of a random stranger.
 
-[Functions of recommender systems? (\cite{rec_sys_handbook})]
+% Raczej bym to olał...
+% [Functions of recommender systems? (\cite{rec_sys_handbook})]
 
 \subsection{Recommendation Techniques}
 
@@ -488,8 +515,6 @@ The Amazon Route 53, a DNS and Domain Name Registration service, was used to lin
 
 
 \section{User data model in Neo4j}
-
-[TODO jakiś wstęp]
 
 \begin{figure}[!t]
 \centering
@@ -1135,6 +1160,9 @@ Web page of \textit{jQuery Raty}, Available at: \url{http://wbotelhos.com/raty},
 
 \bibitem{sinha}
 Rashmi Sinha and Kirsten Swearingen, \textit{Comparing Recommendations Made by Online Systems and Friends}, SIMS, University of California, Available at: \url{http://www.ercim.eu/publication/ws-proceedings/DelNoe02/RashmiSinha.pdf}, [access: 13 September 2015].
+
+\bibitem{facebook_social_graph}
+Article by Paula Rooney, \textit{Facebook's Social Graph, Neo4j show rising use of graph databases}, ZDNet, 16 January 2013, Available at: \url{http://www.zdnet.com/article/facebooks-social-graph-neo4j-show-rising-use-of-graph-databases/}, [access: 13 September 2015].
 
 \end{thebibliography}
 
