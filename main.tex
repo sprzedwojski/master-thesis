@@ -19,6 +19,7 @@
 \renewcommand{\tablename}{Tab.}
 \renewcommand{\listfigurename}{List of figures}
 \renewcommand{\listtablename}{List of tables}
+\renewcommand{\listoflistingscaption}{List of listings}
 \renewcommand{\bibname}{Bibliography}
 
 \renewcommand{\labelitemi}{$\diamond$}
@@ -104,67 +105,66 @@ The expected result of the thesis is the creation of a recommender system that w
 
 Moreover, the implementation of the system in an exemplary website is expected to illustrate a seamless integration of the recommender with an e-commerce storefront, providing the users with suggestions in a matter of seconds, thanks to the use of asynchronous processing and a graph database, and not obstructing the shopping process in any way.
 
-% Spodziewane efekty:\\
-% - rzetelne rekomendacje tuż po zalogowaniu użytkownika\\
-% - ...\\
-
-% Dlaczego podejmowanie tej tematyki jest potrzebne? Czy są inne
-% rozwiązania tego problemu/tych problemów? Jakie? czy są lepsze/gorsze,
-% tańsze/droższe, itp.
-% \indent Przed jakimi wyzwaniami stoi osoba podejmująca tematykę? \\
-% \indent {\bf Określić spodziewane efekty pracy:} W wyniku doświadczeń przeprowadzonych w zakresie pracy polepszeniu
-% uległo.... podać konkretne wskaźniki rezultaty, jak np. przyspieszenie obliczeń,
-% redukcja kosztu, nowe oprogramowanie itp. w złotówkach, sekundach, procentach,
-% roboczogodzinach itp. 
-
-% {\bf (razem max. 3 strony - strona przeliczeniowa = 1800 znaków, średnio 30
-% wierszy po 60 znaków)}
-
 \section{Objectives}
 
-- ofkors że zrobić RS [rozwinąć to]
-
-- zaimplementować jako stronkę
-    -- ma być "ładna", żeby testowi userzy chcieli wypełnić ankietę
-
-% Wymienić w punktach cele pracy, rozpoczynając od celów poznawczych (dotyczą\-cych
-% zebrania wiadomości, przybliżenia/popularyzacji technik / metod / zagaadnień).
-% W~drugiej kolejności wyienić cele praktyczne.
-% \subsubsection{Przybliżenie (popularyzacja) metody/technologii/systemu...}
-% \subsubsection{Propozycja rozwiązania problemu....}
-% \subsubsection{Opis zastosowania technologii X w problemie Y...}
-% \subsubsection{Przedstawienie prototypu systemu/układu/aplikacji...}
-% \subsubsection{Określenie przydatności algorytmu Z do rozwiązania problemu T.....
-% }
-% \subsubsection{Opracowanie strategii ... w celu poprawy wydajności/jakości...}
-% \subsubsection{Ocena możliwości wdrożenia proponowanych rozwiązań, ich wartość
-% praktyczna, lokalne i globalne możliwości zastosowania}
-% \subsubsection{itp.}
-
-% Każdy cel opisać w minimum 2-3 zdaniach. Użyte określenia muszą być powszechnie
-% zrozumiałe, nie stosujemy skrótów, slangu,  tzw. makaronizmów, np. ,,softłer''.
-% {\bf cały podrozdział ok. 1 strony przeliczeniowej czyli 1800 znaków}
+In the course of the project the following objectives will be pursued:
+\begin{itemize}
+\item {\bf Review of existing social recommender systems.} Solutions similar to this thesis's topic will be investigated. Similarities and differences between Reco4Social and other approaches will be discussed.
+\item {\bf Presentation of graph databases technology.} Graph databases seem a very interesting and promising technology, therefore an examination of its advantages and disadvantages will be performed to better understand when they can be a useful toolset for a particular problem.
+\item {\bf Design and implementation of a demo e-commerce store.} It will incorporate the social login functionality and will be able to download user data from a social network and store it in a graph database. It will also gather ratings of products from test users in the first part of the project.
+\item {\bf Design and implementation of a social recommender system.} The RS will be integrated into the e-commerce store. It should provide recommendations to a new user on the basis of their social network information.
+\item {\bf Evaluation of the created RS.} The metrics will involve predictive and classification accuracy measurements.
+\item {\bf Analysis of a possible commercial implementation.} An assessment of the system's potential introduction in software solutions provided by AMG.net/Atos to its clients.
+\item {\bf Proposition of improvements and further development.} An overview of the system's shortcomings and possible ways of enhancing them in the future.
+\end{itemize}
 
 \section{Research method}
-% \begin{itemize}
-% \item Studia literaturowe
-% \item Analiza budowy i działania istniejących produktów
-% \item Projektowanie i prototypowanie nowatorskich rozwiązań 
-% \item Obliczenia i ........
-% \end{itemize}
 
-% Każdy element opisać w minimum 2-3 zdaniach. Np. studia literaturowe powinny
-% odnosić się do charakterystyki wykorzystanych źródeł książkowych, czyli: Jaka
-% jest podstawowa literatura dziedziny, czy jest dostępna w języku polskim, czy trzeba je tłumaczyć, czy wiedza na ten
-% temat jest zebrana w jednym miejscu, czy jej synteza jest osobnym zadaniem itp. 
-% Jak duży jest udział źródeł elektronicznych w tej ,,działce'' wiedzy i badań,
-% itd. \\
-% \indent Jakie metody badawcze są typowe dla danego tematu. Dlaczego je
-% zastosowano, ewentualnie dlaczego zastosowano inne? \\
-% WYMAGANE ODNOŚNIKI DO POZYCJI BILIOGRAFII.\\
-% {\bf cały podrozdział ok. 1 strony przeliczeniowej czyli 1800 znaków}.
+\begin{itemize}
+\item {\bf Literature studies.} Most books and articles on the topic are published in English. All the materials used to study the topic were available online. 
+\item {\bf Analysis of recommender systems.} The examination of typical RS types and identification of their flaws and shortcomings was performed based on the literature and on previous experiences.
+\item {\bf Prototyping a social recommender system.} There were several ideas on how the new solution might work. They were analyzed, compared and finally the best approach was chosen.
+\item {\bf System testing.} Typical methods to evaluate RSs, presented in the literature (\cite{eval_microsoft, eval_twente}), were applied. 
+\end{itemize}
 
 \section{Literature overview} % ?? czy to będzie ?
+
+\subsubsection{Book sources}
+Books used in the thesis cover the areas of recommender systems (\textit{Introduction to Recommender Systems Handbook}, \cite{rec_sys_handbook}) and graph databases \cite{graph_databases, learning_neo4j}.
+% rec_sys_handbook
+% graph_databases
+% learning_neo4j
+
+\subsubsection{Research publishings}
+
+
+
+% ben_gurion
+% snrs
+
+% eval_microsoft
+% eval_twente
+% sinha
+
+\subsubsection{Online articles and presentations}
+Presentations: \cite{rise_of_social_commerce}, \cite{}
+
+% social_login
+% social_commerce_syzygy
+% facebook_social_graph
+
+\subsubsection{Technical documentations}
+
+
+% spring_framework
+% lumen
+% restfb
+% neo4j
+% facebook_login_web
+% jquery_validate
+% bootply_ecommerce
+% jquery_raty
+
 % Rozszerzyć odpowiedni podpunkt z metody badawczej, np. wg podziału:
 % \subsubsection{Źródła książkowe polskojęzyczne i tłumaczenia}
 % \subsubsection{Źródła książkowe obcojęzyczne}
@@ -174,6 +174,9 @@ Moreover, the implementation of the system in an exemplary website is expected t
 
 
 \section{Thesis plan}
+
+The rest of this paper is organized as follows.
+
 % Tematem pracy jest: ....., zaś za główny cel przyjęto ...... . \\
 % Rozdział \label{rozdz.wstep} zawiera wstęp i cele pracy. W rozdziale drugim
 % opisano/...... w Rozdziale 3. zawarto............ Rozdział 4. przedstawia..... \\
@@ -187,7 +190,9 @@ Moreover, the implementation of the system in an exemplary website is expected t
 
 
 
-\chapter[Fundamental information on social...]{Fundamental information on social commerce, recommendation algorithms and graph databases} \label{fundamental_info}
+\chapter{Fundamental information on social commerce, recommendation algorithms and graph databases}
+\chaptermark{Fundamental information on social commerce...}
+\label{fundamental_info}
 
 \section{Social Commerce}
 
@@ -422,7 +427,8 @@ That said, there are certain scenarios where graph databases greatly outperform 
 
 % \subsubsection{Agility}
 
-\chapter[Presentation of existing social recommender...]{Presentation of existing social recommender systems}
+\chapter{Presentation of existing social recommender systems}
+\chaptermark{Presentation of existing social recommender...}
 
 \section{"A Social Network-Based Recommender System (SNRS)"}
 
@@ -455,9 +461,9 @@ In addition to the mediocre results, this system does not at all solve the issue
 This is again different from Reco4Social, which primarily aims to eliminate the need for the users to provide any additional information apart that, which can be collected from their social network.
 
 
-\section{other...}
+% \section{other...}
 
-[TODO czy tutaj jakiś kolejny social RS (np. aranda.pdf), czy jakiś klasyczny RS, np. netflix, amazon? --> pytanie do promotora?]
+% [TODO czy tutaj jakiś kolejny social RS (np. aranda.pdf), czy jakiś klasyczny RS, np. netflix, amazon? --> pytanie do promotora?]
 
 % % %
 \chapter{Implementation of new functionalities}
@@ -558,6 +564,9 @@ The node central to the model is the \texttt{User} node which can be related to 
 In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship. 
 
 [TODO? coś jeszcze?]
+
+\hbox{}
+[TODO screen z odpalonego grafu w neo4j z jakimis danymi]
 
 \section{Recommendation algorithm}
 
@@ -1173,6 +1182,9 @@ Article by Paula Rooney, \textit{Facebook's Social Graph, Neo4j show rising use 
 
 \addcontentsline{toc}{chapter}{List of tables} 
 \listoftables
+
+\addcontentsline{toc}{chapter}{List of listings} 
+\listoflistings
 
 \end{document}
 
