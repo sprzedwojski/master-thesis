@@ -43,7 +43,7 @@
 %\indent - wymuszony odstep
 %\bf - pogrubienie
 
-\chapter{Introduction} \label{rozdz.wstep} 
+\chapter{Introduction} \label{ch.intro} 
 In the age of ubiquitous Internet access more and more human activities take place in the Web. E-commerce, the act of shopping online, has been on the increase for many years. Today virtually any retail business has an online store, and some are even created from ground up as purely e-commerce ventures with no real-world boutiques at all (e.g. Amazon).
 
 The amount of products offered on the Internet can be overwhelming for an average consumer. The fast growth of new e-business services (buying products, product comparison, auctions) produced a vast choice, which, instead of increasing user happiness, started to decrease their well-being \cite{rec_sys_handbook}. Therefore companies take efforts to properly target users with relevant content. Correct product targeting directly translates to user satisfaction and increased sales, thus creating a "win-win" situation. Systems responsible for recommending relevant products to users are {\bf recommender systems}.
@@ -127,72 +127,33 @@ In the course of the project the following objectives will be pursued:
 \item {\bf System testing.} Typical methods to evaluate RSs, presented in the literature (\cite{eval_microsoft, eval_twente}), were applied. 
 \end{itemize}
 
-\section{Literature overview} % ?? czy to będzie ?
+\section{Literature overview}
 
 \subsubsection{Book sources}
-Books used in the thesis cover the areas of recommender systems (\textit{Introduction to Recommender Systems Handbook}, \cite{rec_sys_handbook}) and graph databases \cite{graph_databases, learning_neo4j}.
-% rec_sys_handbook
-% graph_databases
-% learning_neo4j
+Books used in the thesis cover the areas of recommender systems (\textit{Introduction to Recommender Systems Handbook} \cite{rec_sys_handbook}) and graph databases (\textit{Graph Databases} \cite{graph_databases}, \textit{Learning Neo4j} \cite{learning_neo4j}).
 
 \subsubsection{Research publishings}
 
-
-
-% ben_gurion
-% snrs
-
-% eval_microsoft
-% eval_twente
-% sinha
+Publishings on existing social network recommenders were studied (\textit{Recommender System from Personal Social Networks} \cite{ben_gurion}, \textit{A Social Network-Based Recommender System (SNRS)} \cite{snrs}, \textit{Comparing Recommendations Made by Online Systems and Friends} \cite{sinha}). Moreover, the research on evaluating RSs was used to establish methods of testing the system (\textit{Evaluating Recommendation Systems} \cite{eval_microsoft}, \textit{Evaluating Recommender Systems} \cite{eval_twente}).
 
 \subsubsection{Online articles and presentations}
-Presentations: \cite{rise_of_social_commerce}, \cite{}
 
-% social_login
-% social_commerce_syzygy
-% facebook_social_graph
+The topic of social media and social commerce is inherently related to the Internet, therefore online articles and presentations provided information in this field (\textit{Rise of Social Commerce} \cite{rise_of_social_commerce}, \textit{Social Login: A Data Capture Game Changer} \cite{social_login}, \textit{Social Commerce: Monetizing Social Media} \cite{social_commerce_syzygy}, \textit{Facebook's Social Graph, Neo4j show rising use of graph databases} \cite{facebook_social_graph}).
 
-\subsubsection{Technical documentations}
+\subsubsection{Technical documentations and tutorials}
 
-
-% spring_framework
-% lumen
-% restfb
-% neo4j
-% facebook_login_web
-% jquery_validate
-% bootply_ecommerce
-% jquery_raty
-
-% Rozszerzyć odpowiedni podpunkt z metody badawczej, np. wg podziału:
-% \subsubsection{Źródła książkowe polskojęzyczne i tłumaczenia}
-% \subsubsection{Źródła książkowe obcojęzyczne}
-% \subsubsection{Artykuły naukowe, raporty z badań, komunikaty konferencyjne,
-% dokumentacje techniczne, manuale, instrukcje}
-% \subsubsection{Źródła elektroniczne}
+During the practical implementation of the web application the technical documentations and tutorials for the technologies used were consulted (Spring Framework \cite{spring_framework}, Neo4j \cite{neo4j}, Bootstrap e-commerce template \cite{bootply_ecommerce}, Bootstrap Lumen theme \cite{lumen}, jQuery Validate \cite{jquery_validate}, jQuery Raty \cite{jquery_raty}, RestFB \cite{restfb}, \textit{Facebook Login for the Web with the JavaScript SDK} \cite{facebook_login_web}). 
 
 
 \section{Thesis plan}
 
-The rest of this paper is organized as follows.
-
-% Tematem pracy jest: ....., zaś za główny cel przyjęto ...... . \\
-% Rozdział \label{rozdz.wstep} zawiera wstęp i cele pracy. W rozdziale drugim
-% opisano/...... w Rozdziale 3. zawarto............ Rozdział 4. przedstawia..... \\
-% W podsumowaniu pracy przedstawiono..........................., z czego wynika,
-% że ................  \\
-% Najważniejszym wnioskiem/wynikiem/rezultatem pracy jest..................\\ {\bf wyraźnie określić
-% CO TO JEST}. \\
-
-% {\bf cały podrozdział ok. 1 strony}.
-
+The rest of this paper is organized as follows. Chapter \ref{ch.fundamental_info} provides a theoretical background on social commerce, recommender systems and graph databases. Next, in Chapter \ref{ch.presentation_existing} a study of existing social recommender systems is conducted. The whole process of design and implementation of the original solution is described in Chapter \ref{ch.implementation}. Chapter \ref{ch.evaluation} offers the analysis and evaluation of the RS results. Finally, Chapter \ref{ch.summary} presents the final conclusions, possibilities of commercial applications of the solution and propositions of future development of the system.
 
 
 
 \chapter{Fundamental information on social commerce, recommendation algorithms and graph databases}
 \chaptermark{Fundamental information on social commerce...}
-\label{fundamental_info}
+\label{ch.fundamental_info}
 
 \section{Social Commerce}
 
@@ -429,6 +390,7 @@ That said, there are certain scenarios where graph databases greatly outperform 
 
 \chapter{Presentation of existing social recommender systems}
 \chaptermark{Presentation of existing social recommender...}
+\label{ch.presentation_existing}
 
 \section{"A Social Network-Based Recommender System (SNRS)"}
 
@@ -467,6 +429,7 @@ This is again different from Reco4Social, which primarily aims to eliminate the 
 
 % % %
 \chapter{Implementation of new functionalities}
+\label{ch.implementation}
 
 \section{Overview}
 \subsection{General idea}
@@ -1095,6 +1058,7 @@ The general trend of how the parameters vary within a constant \texttt{K} and a 
 \section{Comparison to non-social recommender systems}
 
 \chapter{Summary and conclusions}
+\label{ch.summary}
 \section{Conclusions}
 \section{Usability of the project in AMG.net/Atos}
 \section{Future development perspectives}
@@ -1187,4 +1151,5 @@ Article by Paula Rooney, \textit{Facebook's Social Graph, Neo4j show rising use 
 \listoflistings
 
 \end{document}
+
 
