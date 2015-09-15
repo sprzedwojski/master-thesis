@@ -115,7 +115,7 @@ In the course of the project the following objectives will be pursued:
 \item {\bf Design and implementation of a demo e-commerce store.} It will incorporate the social login functionality and will be able to download user data from a social network and store it in a graph database. It will also gather ratings of products from test users in the first part of the project.
 \item {\bf Design and implementation of a social recommender system.} The RS will be integrated into the e-commerce store. It should provide recommendations to a new user on the basis of their social network information.
 \item {\bf Evaluation of the created RS.} The metrics will involve predictive and classification accuracy measurements.
-\item {\bf Analysis of a possible commercial implementation.} An assessment of the system's potential introduction in software solutions provided by AMG.net/Atos to its clients.
+% \item {\bf Analysis of a possible commercial implementation.} An assessment of the system's potential introduction in software solutions provided by AMG.net/Atos to its clients.
 \item {\bf Proposition of improvements and further development.} An overview of the system's shortcomings and possible ways of enhancing them in the future.
 \end{itemize}
 
@@ -148,7 +148,8 @@ During the practical implementation of the web application the technical documen
 
 \section{Thesis plan}
 
-The rest of this paper is organized as follows. Chapter \ref{ch.fundamental_info} provides a theoretical background on social commerce, recommender systems and graph databases. Next, in Chapter \ref{ch.presentation_existing} a study of existing social recommender systems is conducted. The whole process of design and implementation of the original solution is described in Chapter \ref{ch.implementation}. Chapter \ref{ch.evaluation} offers the analysis and evaluation of the RS results. Finally, Chapter \ref{ch.summary} presents the final conclusions, possibilities of commercial applications of the solution and propositions of future development of the system.
+The rest of this paper is organized as follows. Chapter \ref{ch.fundamental_info} provides a theoretical background on social commerce, recommender systems and graph databases. Next, in Chapter \ref{ch.presentation_existing} a study of existing social recommender systems is conducted. The whole process of design and implementation of the original solution is described in Chapter \ref{ch.implementation}. Chapter \ref{ch.evaluation} offers the analysis and evaluation of the RS results. Finally, Chapter \ref{ch.summary} presents the summary, final conclusions and propositions for future development of the system.
+% possibilities of commercial applications of the solution 
 
 
 
@@ -158,8 +159,8 @@ The rest of this paper is organized as follows. Chapter \ref{ch.fundamental_info
 
 \section{Social Commerce}
 
-- opisać social media?\\
-- opisać e-commerce?\\
+% - opisać social media?\\
+% - opisać e-commerce?\\
 
 Social commerce is the fusion of social media with e-commerce \cite{social_commerce_syzygy}. It uses social media, which are founded on user interactions and contributions, to improve the shopping experience on the Internet.
 
@@ -1348,11 +1349,9 @@ The social network recommender developed in the course of this thesis received o
 
 \section{Evaluation of computation time}
 
-[TODO]
+One of the objectives of the thesis was to implement Reco4Social in a web application in a way that would not obstruct the shopping process of a user in a real e-commerce store. Therefore recommendations loading has been integrated in an asynchronous manner. However, even if asynchronous, the recommendation loading time should be as fast as possible. In this test the time between user logging into the system and product suggestions appearing was measured.
 
-Server: Intel Core i7, 16 GB RAM, 90 Mb/s downlink.
-
-\begin{table}[h]
+\begin{table}[hptb]
 \centering
 \caption{Time between login and recommendations presentation.}
 \label{table.eval.time1}
@@ -1366,14 +1365,32 @@ Trial no. & User A & User B \\ \hline
 \end{tabular}
 \end{table}
 
+The parameters of the local host server were: Intel Core i7 processor, 16 GB RAM, 90 Mb/s downlink Internet speed. The test was performed for two users and repeated several times (Table \ref{table.eval.time1}). It is worth noting that the most time consuming factor is user data downloading from Facebook. Overall, in all cases the process took between 5 - 10 seconds, which is a very satisfactory result, as I expected it might take over 10 seconds. If the user- and product- base of a real store was bigger, the recommendations calculations might take a few seconds longer, however with such a starting point the end result would still be very good in terms of speed.
+
 % \section{Comparison to non-social recommender systems}
 
 
 
 \chapter{Summary and conclusions}
 \label{ch.summary}
+\section{Summary}
+
+In the course of the project all of the objectives set out at the beginning have been realized. Several existing social recommender system were studied, examined and reviewed. Their advantages and disadvantages were pinpointed, as well as the similarities and differences with respect to Reco4Social.
+
+Graph databases were presented as a valuable database technology, extremely efficient in certain applications. The exact benefits of using them were discussed, as well as situations in which other database solutions might be more suitable.
+
+Furthermore, the process of design and implementation of the social recommender system was demonstrated. The exact approach to selecting nearest neighbours based on social information and recommendations generation was laid out.
+
+Next, the approach to creating the demo e-commerce store was presented, that would incorporate the newly created recommender system. Technology choices were explained along with technical details of the system's functioning.
+
+Afterwards, the system's performance was measured and assessed. The typical metrics for recommender systems were employed.
+
+Finally, this chapter completes the objectives with the analysis of the potential next steps in the product's development.
+
 \section{Conclusions}
-\section{Usability of the project in AMG.net/Atos}
+
+
+
 \section{Future development perspectives}
 
 % - większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
@@ -1467,5 +1484,4 @@ Article by Paula Rooney, \textit{Facebook's Social Graph, Neo4j show rising use 
 \listoflistings
 
 \end{document}
-
 
