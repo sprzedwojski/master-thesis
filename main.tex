@@ -1074,7 +1074,7 @@ The evaluation was performed by calculating RMSE, MAE, Precision, Recall and F-m
 
 The results of the basic predictive analysis for the popularity approach are presented in Table \ref{table.pred.popularity1}. The results of an analogical test for Reco4Social are depicted in Table \ref{table.pred.reco1}. In this case, the values of K (number of closest neighbours taken into account for rating computation) were varied from 1 to 30.
 
-\begin{table}[!h]
+\begin{table}[htpb]
 \centering
 \caption{Predictive, popularity approach.}
 \label{table.pred.popularity1}
@@ -1221,13 +1221,6 @@ In the classification analysis it is important how many products are recommended
 
 The test shows that for K=1 the Reco4Social results are slightly lower than those of popularity approach, yet they are at least comparable. For higher values of K, though, they are visibly worse.
 
-In the second examination, the \texttt{min\-Num\-Of\-Ratings} was again introduced. Fragments of the outcome are illustrated in Table \ref{table.clas.reco2}. Because of the abundance of results, only those that were better for Reco4Social were selected (in terms of F-measure).
-
-As illustrated by the results, by manipulating the \texttt{min\-Num\-Of\-Ratings} parameter in some cases it was possible to obtain better F-measure results for Reco4Social than for the popularity approach.
-
-\subsubsection{Results summary}
-
-
 \begin{table}[htpb]
 \centering
 \caption{Classification, Reco4Social, with \texttt{minNumOfRatings} parameter.}
@@ -1272,6 +1265,55 @@ As illustrated by the results, by manipulating the \texttt{min\-Num\-Of\-Ratings
 \end{table}
 
 
+In the second examination, the \texttt{min\-Num\-Of\-Ratings} was again introduced. Fragments of the outcome are illustrated in Table \ref{table.clas.reco2}. Because of the abundance of results, only those that were better for Reco4Social were selected (in terms of F-measure).
+
+As illustrated by the results, by manipulating the \texttt{min\-Num\-Of\-Ratings} parameter in some cases it was possible to obtain better F-measure results for Reco4Social than for the popularity approach.
+
+\subsubsection{Results summary}
+
+It was demonstrated above that with certain settings of parameters Reco4Social is capable of obtaining better results than the popularity approach in both predictive and classification accuracy. However, both types of accuracies were analyzed independently. This section aims to join the two and present a holistic view of the system's evaluation. The combined results have been presented in Table \ref{table.eval.summary1}. Cells where Reco4Social performed better have been marked in bold, whereas those in which it performed worse are in italics.
+
+
+\begin{table}[hptb]
+\centering
+\caption{Combined results of predictive and classification accuracies.}
+\label{table.eval.summary1}
+\vspace{3mm}
+\begin{tabular}{lllllll}
+\hline
+\multicolumn{7}{|c|}{{\bf \it Popularity}}                                                                                                                                                                                                                                            \\ \hline
+\multicolumn{1}{|l|}{}        & \multicolumn{1}{l|}{}                         & \multicolumn{1}{l|}{{\bf RMSE}}    & \multicolumn{1}{l|}{{\bf MAE}}     & \multicolumn{1}{l|}{{\bf F-meas. 10}} & \multicolumn{1}{l|}{{\bf F-meas. 20}} & \multicolumn{1}{l|}{{\bf F-meas. 30}} \\ \hline
+\multicolumn{1}{|l|}{}        & \multicolumn{1}{l|}{}                         & \multicolumn{1}{l|}{1.22622}       & \multicolumn{1}{l|}{1.02823}       & \multicolumn{1}{l|}{0.14456}            & \multicolumn{1}{l|}{0.19781}            & \multicolumn{1}{l|}{0.23155}            \\ \hline
+                              &                                               &                                    &                                    &                                         &                                         &                                         \\ \hline
+\multicolumn{7}{|c|}{{\bf \it Reco4Social}}                                                                                                                                                                                                                                           \\ \hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf minRat.}} & \multicolumn{1}{l|}{{\bf RMSE}}    & \multicolumn{1}{l|}{{\bf MAE}}     & \multicolumn{1}{l|}{{\bf F-meas. 10}} & \multicolumn{1}{l|}{{\bf F-meas. 20}} & \multicolumn{1}{l|}{{\bf F-meas. 30}} \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{{\bf 1.20636}} & \multicolumn{1}{l|}{{\bf 0.98376}} & \multicolumn{1}{l|}{{\it 0.13723}}      & \multicolumn{1}{l|}{{\it 0.16991}}      & \multicolumn{1}{l|}{{\it 0.17776}}      \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{{\bf 1.00881}} & \multicolumn{1}{l|}{{\bf 0.83069}} & \multicolumn{1}{l|}{{\it 0.09871}}      & \multicolumn{1}{l|}{{\it 0.10861}}      & \multicolumn{1}{l|}{{\it 0.10873}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{{\it 1.31669}} & \multicolumn{1}{l|}{{\it 1.07088}} & \multicolumn{1}{l|}{{\bf 0.14926}}      & \multicolumn{1}{l|}{{\bf 0.21230}}      & \multicolumn{1}{l|}{{\bf 0.24683}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{{\bf 1.17249}} & \multicolumn{1}{l|}{{\bf 0.95465}} & \multicolumn{1}{l|}{{\it 0.12297}}      & \multicolumn{1}{l|}{{\it 0.15023}}      & \multicolumn{1}{l|}{{\it 0.15349}}      \\ \hline
+\multicolumn{1}{|l|}{6}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{{\bf 1.21573}} & \multicolumn{1}{l|}{{\bf 0.99056}} & \multicolumn{1}{l|}{{\bf 0.14874}}      & \multicolumn{1}{l|}{{\it 0.19093}}      & \multicolumn{1}{l|}{{\it 0.20129}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{{\it 1.27854}} & \multicolumn{1}{l|}{{\it 1.04742}} & \multicolumn{1}{l|}{{\bf 0.15163}}      & \multicolumn{1}{l|}{{\bf 0.20269}}      & \multicolumn{1}{l|}{{\bf 0.23178}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{6}                        & \multicolumn{1}{l|}{{\bf 0.83691}} & \multicolumn{1}{l|}{{\bf 0.70412}} & \multicolumn{1}{l|}{{\it 0.04321}}      & \multicolumn{1}{l|}{{\it 0.04407}}      & \multicolumn{1}{l|}{{\it 0.04407}}      \\ \hline
+\multicolumn{1}{|l|}{9}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{{\it 1.28297}} & \multicolumn{1}{l|}{{\it 1.05274}} & \multicolumn{1}{l|}{{\bf 0.15547}}      & \multicolumn{1}{l|}{{\bf 0.21762}}      & \multicolumn{1}{l|}{{\bf 0.26224}}      \\ \hline
+\end{tabular}
+\end{table}
+
+
+The conclusion is that there is always a trade-off -- unfortunately no setting of parameters has been found that would enable better results of Reco4Social in all metrics. Where it is able to perform better in predictive accuracy (RMSE, MAE) the outcome is worse in classification accuracy (F-measure) and vice-versa. 
+
+Therefore an implementation decision should be made whether:
+\begin{enumerate}
+\item it is more important to accurately predict the ratings of items, with the consequence that many relevant items may be omitted,
+\item or it is crucial to discover as many relevant items for a user as possible, with the risk of ratings being more inaccurate.
+\end{enumerate}
+
+In the first case the parameters (K, minNumOfRatings) should be optimized for RMSE and MAE results, while in the second case they should maximize the F-measure.
+
+\hbox{}
+To summarize, the good results of the popularity approach were a surprise. It turns out that such a simple approach may be a reasonable way of diminishing the effects of cold-start and data sparsity problems in RSs for new users. 
+
+The social network recommender developed in the course of this thesis received overall similar results to the popularity approach. Depending on the settings of parameters they could be better or worse. It was possible to achieve significantly better results in one type of accuracy (e.g. predictive), however at the expense of much worse results in the other.
+
 % The evaluation was performed by calculating RMSE, MAE, Precision, Recall and F-measure for each user in the database. This approach represents a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
 
 % Moreover, this process was repeated for varying values of \texttt{K} and \texttt{minNumOf\-Ratings} -- both in the range from 1 to 10. The \texttt{ratingLowest} has been set to 4 as the threshold for relevancy.
@@ -1304,10 +1346,29 @@ As illustrated by the results, by manipulating the \texttt{min\-Num\-Of\-Ratings
 % \label{fig.results_chart_k-8}
 % \end{figure}
 
-% \section{Evaluation of computation time and resource consumption}
-\section{Comparison to non-social recommender systems}
+\section{Evaluation of computation time}
 
-[TODO opis słowny]
+[TODO]
+
+Server: Intel Core i7, 16 GB RAM, 90 Mb/s downlink.
+
+\begin{table}[h]
+\centering
+\caption{Time between login and recommendations presentation.}
+\label{table.eval.time1}
+\vspace{3mm}
+\begin{tabular}{|l|l|l|}
+\hline
+Trial no. & User A & User B \\ \hline
+1         & 9:36 s & 7:16 s \\ \hline
+2         & 6:41 s & 5:10 s \\ \hline
+3         & 5:84 s & 5:21 s \\ \hline
+\end{tabular}
+\end{table}
+
+% \section{Comparison to non-social recommender systems}
+
+
 
 \chapter{Summary and conclusions}
 \label{ch.summary}
