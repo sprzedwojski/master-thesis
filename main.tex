@@ -35,7 +35,8 @@
 \newtheorem{example}{Example}[chapter] % przykład nowego środowiska 
 \newtheorem{corollary}{Corollary}[chapter] % przykład nowego środowiska [corollary => wniosek] 
 
-
+\widowpenalty10000
+\clubpenalty10000
 
 \begin{document}
 \tableofcontents	% generuje spis treści ze stronami !!!
@@ -194,8 +195,6 @@ According to Dr Paul Marsden of Syzygy Group \cite{social_commerce_syzygy}, ther
 
 In this thesis I will focus only on the Recommendations approach to social commerce.
 
-[TODO]
-
 \section{Recommender Systems}
 
 \subsection{Overview}
@@ -223,7 +222,7 @@ The two most popular classes of recommender systems are {\bf content based} and 
 
 The advantage of such an approach is that there is no need for other users in the system. It could work even if only a single user was using it.
 
-However the disadvantage is that all items need to be well characterised by features, which imposes constraints on item addition. Moreover, only items of the same category can be compared, as it is impossible to directly compare features of, e.g. a movie and a music album. Therefore this kind of system could not work well in a multi-category environment.
+However the disadvantage is that all items need to be well characterised by features, which imposes constraints on item addition. Moreover, only items of the same category can be compared, as it is impossible to directly compare features of, for instance, a movie and a music album. Therefore this kind of system could not work well in a multi-category environment.
 
 \hbox{}
 {\bf Collaborative filtering (CF):} The idea is to recommend to the active user the items that other users with similar interests liked in the past. The similarity between two users is calculated on the basis of their past ratings of items. Then, if the RS finds that e.g. user B is most similar to the active user A, it will find items highly rated by B that A has not yet rated (thus probably does not know) and recommend them to user A.
@@ -238,7 +237,7 @@ Nevertheless, there is one more that stands out in the context of this thesis. A
 
 The research about these systems is still in an early phase an the results are mixed \cite{rec_sys_handbook}. They do indicate though that social-network-based recommendations are very useful in certain situation, e.g. for cold-start problems. They also show that combining a social recommender with a traditional CF improves recommendation results.
 
-The main difference between these RSs and the one that is the topic of this thesis is that in the case of Reco4Social, frienship in a social network is only one of multiple criteria of user similarity. The others refer to similarities in taste, gender, religion, political view, geographical area etc. In this manner Reco4Social can be regarded as a crossover between a classical CF and a social recommender system.
+The main difference between these RSs and the one that is the topic of this thesis is that in the case of Reco4Social, friendship in a social network is only one of multiple criteria of user similarity. The others refer to similarities in taste, gender, religion, political view, geographical area etc. In this manner Reco4Social can be regarded as a crossover between a classic CF and a social recommender system.
 % a more comprehensive variant of a social recommender system.
 
 \subsection{Application}
@@ -248,7 +247,7 @@ Nowadays recommender systems are used in a variety of domains, some of which inc
 \begin{itemize}
 \item Entertainment -- recommendations for movies, music
 \item E-commerce -- suggestions of products to buy
-\item Social -- propositions of people on social networks that a user might now, potential partners on online dating sites
+\item Social -- suggestions of people on social networks that a user might now, finding potential partners on online dating sites
 \item Content -- interesting news, books, articles
 \item Services -- recommendations of restaurants, hotels, financial services, life insurance, travel destinations
 \end{itemize}
@@ -270,8 +269,6 @@ Graph theory, the study of graph models and algorithms, has been used in many di
 \item {\bf Route problems}: To find the optimal route between two nodes on a network, e.g. car navigation systems.
 \item {\bf Web search}: The original Google search algorithm, PageRank, was a graph algorithm.
 \end{itemize}
-
-[TODO więcej?]
 
 \subsection{Graph Database Management Systems}
 
@@ -352,10 +349,10 @@ Clauses to update the graph:
 \item \texttt{MERGE}: Match existing or create new nodes and patterns.
 \end{itemize}
 
-An example of a simple query is shown in Listing \ref{listing.cypher_sample1}. It returns all nodes with label \texttt{Vegetable} that the node with label \texttt{User} having the property "name" with value "Mike" is related to with the relationship type \texttt{LIKES}. In casual terms, it returns all vegetables that the user Mike likes.
+An example of a simple query is shown in Listing \ref{listing.cypher_sample1}. It returns all nodes with label \texttt{Vegetable} that the node with label \texttt{User}, having the property "name" with value "Mike", is related to with the relationship type \texttt{LIKES}. In casual terms, it returns all vegetables that the user Mike likes.
 
 \begin{listing}
-\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{plpgsql}
 MATCH (m:User {name:"Mike"})-[:LIKES]-(c:Vegetable)
 RETURN c
 \end{minted}
@@ -375,10 +372,10 @@ RETURN c
 
 Even though almost any dataset can be modelled as a graph, it does not mean it always should. There are many cases in which relational or other NoSQL databases are an equal or a better choice. For instance when dealing with large, set-oriented queries, which do not require a lot of joining or require a lot of aggregation on these sets, then the performance will be much better with a relational database. Similarly, with simple, aggregate-oriented queries a key--value or document store would be more efficient \cite{learning_neo4j}.
 
-That said, there are certain scenarios where graph databases greatly outperform any other solutions \cite{learning_neo4j}. 
+That said, there are certain scenarios where graph databases greatly outperform any other solutions \cite{learning_neo4j}:
 \begin{itemize}
-\item {\bf Complex queries}: These are queries that involve a lot of join-style operations. They are very expensive operation in relational database system because of the need to compute the Cartesian product of the indices of tables that are being joined. In graph databases, however, these type of queries are pattern matching queries, which are performed by choosing a starting node and looking for matching occurrences of that pattern in the vicinity of that node - everything that is not connected to the starting node will be omitted. Therefore the performance does not depend on the dataset size, because usually everything is not connected to everything. 
-\item {\bf Intensive queries on live data}: Typically in order to deeply analyze the relational data, it must be duplicated, denormalized and processed by techniques such as Extract, Transform and Load (ETL) to yield query-specific representations. This is because the performance on a live database would be too poor and could slow the entire database. Graph databases, however, are able to handle such complex queries between a web request and a web response, making it applicable to real-time analytics.
+\item {\bf Complex queries}: These are queries that involve a lot of join-style operations. They are very expensive operations in a relational database system because of the need to compute the Cartesian product of the indices of tables that are being joined. In graph databases, however, these types of queries are pattern matching queries, which are performed by choosing a starting node and looking for matching occurrences of that pattern in the vicinity of that node -- everything that is not connected to the starting node will be omitted. Therefore the performance does not depend on the dataset size, because usually everything is not connected to everything. 
+\item {\bf Intensive queries on live data}: Typically in order to deeply analyze the relational data, it must be duplicated, denormalized and processed by techniques such as Extract, Transform and Load (ETL) to yield query-specific representations. This is because the performance on a live database would be too poor and could slow down the entire database. Graph databases, however, are able to handle such complex queries between a web request and a web response, making it applicable to real-time analytics.
 \item {\bf Path finding queries}: In graph databases, when looking for how two elements are interconnected, all that needs to be done is to apply a graph algorithm to a starting and an ending point. In the case of relational databases, one would have to explicitly state how to move from on table to another.
 \end{itemize}
 
@@ -415,12 +412,12 @@ David Ben-Shimon et al. \cite{ben_gurion} from Ben-Gurion University developed a
 
 They have tested their system on a group of 50 users, all of which had to indicate their friends from the group and rate 108 movies on a scale of 1 to 5. The list of recommendations for each user is based on the items that his/her friends like and dislike. Recommendations are constructed by summing the impact of ratings of the personal social network, both positive and negative. Moreover, they are based not only on ratings of the closest friends, but also of those at a greater \textit{distance} in the social network (i.e. friends of friends), with the appropriate attenuation (the \textit{farther} the user, the lesser the impact).
 
-The results of tests have shown that this approach received similar results to the situation, when the most popular movies were recommended instead. The authors speculate that some of the algorithm's parameters could be tweaked to potentially improve the performance.
+The results of tests have shown that this approach received similar results to the situation when the most popular movies were recommended instead. The authors speculate that some of the algorithm's parameters could be tweaked to potentially improve the performance.
 
 \hbox{}
 In addition to the mediocre results, this system does not at all solve the issue of cold-start. Before recommendations for a user can be generated, he/she has to provide both the information about friends and ratings of items.
 
-This is again different from Reco4Social, which primarily aims to eliminate the need for the users to provide any additional information apart that, which can be collected from their social network.
+This is again different from Reco4Social, which primarily aims to eliminate the need for the users to provide any additional information apart that which can be collected from their social network.
 
 
 % \section{other...}
@@ -435,25 +432,26 @@ This is again different from Reco4Social, which primarily aims to eliminate the 
 \subsection{General idea}
 In order to implement and test the system I have decided to build a web application. It is a sample e-commerce store that will gather information about users from their social network. Additionally it will contain a list of exemplary products from different categories, which will be recommendable items. 
 
-The general idea was to implement the so-called "social login" - \cite{social_login} a feature enabling the user to log in to a third-party website using existing login information from a social networking service, without the need of creating a new login account specifically for that website. A website using this feature can request additional information from the user's profile, such as gender, location, list of friends, interests etc. 
+The general idea was to implement the so-called "social login" - \cite{social_login} a feature enabling the user to log in to a third-party website using existing login information from a social networking service, without the need of creating a new account specifically for that website. A website using this feature can request additional information from the user's profile, such as gender, location, list of friends, interests etc. 
 
-Thanks to this, a newly logged user would not be anonymous for my application. By requesting appropriate information from the social network I would be able to analyze user's data and compare them to other existing users in my database. As a result, it would be possible to calculate similarities between users, which is a crucial step in recommender systems.
+Thanks to this, a newly logged user will not be anonymous for the application. By requesting appropriate information from the social network the system will be able to analyze user's data and compare them to other existing users in the database. As a result, it would be possible to calculate similarities between users, which is a crucial step in recommender systems.
 
-It is worth noting that the user similarity computation would occur before any interaction of the user with my application. This is a major difference as opposed to classical collaborative filtering approaches, where in order to find nearest neighbours (most similar users) users are compared in terms of their preferences towards recommendable items (e.g. ratings of movies). In my case only the information derived from social networks influences the similarity.
+It is worth noting that the user similarity computation would occur before any interaction of the user with the application. This is a major difference as opposed to classic collaborative filtering approaches, where in order to find nearest neighbours (most similar users) users are compared in terms of their preferences towards recommendable items (e.g. ratings of movies). In Reco4Social only the information derived from social networks influences the similarity.
 
-As a consequence, the new approach enables serving recommendations to new users right after their login to the website. The only limiting factor is data downloading from the social network and computation time. Nevertheless, it is safe to assume that the result could be presented withing tens of seconds after the login step. Even if it is not instantaneous, in a typical use case the time needed for recommendation computation would allow the user to get familiar with the website's layout, functionalities etc. When the results would be ready, they could be asynchronously loaded onto the page. 
+As a consequence, the new approach enables providing recommendations to new users right after their login to the website. The only limiting factor is data downloading from the social network and computation time. Nevertheless, it is safe to assume that the result could be presented withing tens of seconds after the login step. Even if it is not instantaneous, in a typical use case the time needed for recommendation computation would allow the user to get familiar with the website's layout, functionalities etc. When the results would be ready, they could be asynchronously loaded onto the page. 
 
-The only prerequisite for such a situation is that there exists a reasonable user base of the service. Moreover, the system needs to both possess the users' social network information and to know their preferences towards the system's items. Therefore, in a typical scenario of implementation in an existing service, first the social login and social information acquisition would be enabled. After a period of gathering the preferences of socially-logged users, via their item ratings, shopping/browsing history, comment analysis etc., the initial user base would be established. In the second phase, each new user could obtain recommendations. Obviously, the system will improve over time, as more and more users with social data and product preferences are in the database.
+The only prerequisite for such a situation is that there exists a reasonable user base of the service. Moreover, the system needs to both possess the users' social network information and to know their preferences towards the system's items. Therefore, in a typical scenario of implementation in an existing service, first the social login and social information acquisition would be enabled. After a period of gathering the preferences of socially-logged users, via their item ratings, shopping/browsing history, comment analysis etc., the initial user base would be established. In the second phase, each new user could obtain recommendations. 
+% Obviously, the system will improve over time, as more and more users with social data and product preferences are in the database.
 
 \subsection{Solution outline}
 
 The system implementation will be conducted in two stages.
 \begin{enumerate}
-\item Users will be able to log in to the website with their social network account. Next, they will be asked to complete a survey, in which they will rate products in the store's catalog according to their tastes. No recommendation will be offered at this point.
+\item Users will be able to log in to the website with their social network accounts. Next, they will be asked to complete a survey, in which they will rate products in the store's catalog according to their tastes. No recommendations will be offered at this point.
 \item Having the initial user base, any new user logging in with the social network will be presented with instant recommendations on products.
 \end{enumerate}
 
-The social network that the application will integrate with is Facebook. After research it was found that Facebook can provide most useful user information. Moreover, it is the most popular social network in Poland, therefore it will be easiest to find volunteers eager to provide their data to the project.
+The social network that the application will integrate with is Facebook. After research it was found that Facebook can provide most robust user information. Moreover, it is the most popular social network in Poland, therefore it will be easiest to find volunteers eager to provide their data to the project.
 
 \subsection{Technologies}
 \subsubsection{Web application}
@@ -463,8 +461,7 @@ The front-end of the website uses the typical web technology stack: HTML / CSS /
 
 The connection with Facebook was realized with the help of RestFB - a simple Facebook Graph API written in Java \cite{restfb}.
 
-\hbox{}
-[TODO Neo4j java libraries]
+The database connection from the application has been implemented with the help of Neo4j Java libraries \cite{neo4j}.
 
 \subsubsection{Database}
 
@@ -479,8 +476,26 @@ The hosting provider is Amazon Web Services (AWS). The Spring application runs o
 The Amazon Route 53, a DNS and Domain Name Registration service, was used to link the domain name to the EC2 instance's IP address.
 
 
+\section{Facebook application configuration}
+The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
 
+The place for managing Facebook applications is the Developer center, available at the URL: \url{https://developers.facebook.com/}.
 
+To properly configure a new App, multiple details need to be provided, including the name, category, type (iOS, Android, web), its domain, website etc. Afterwards, two parameters are generated: App ID and App Secret, that allow client authorization.
+
+When new App is created, at first it possesses only the basic permissions for accessing users' data, namely the \url{public_profile}, \url{email} and \url{user_friends} items.
+
+In order to gain permissions for additional information, an approval submission needs to be filled in. Facebook expects detailed explanation, along with screenshots of the website, of how the obtained data will be used. At first my submission was rejected, however the second time, after having underlined that my project is not commercial, but purely academic, the permissions were granted.
+
+In the end the Facebook App has the following permissions that are used in the project:
+\begin{itemize}
+\item \url{public_profile}
+\item \url{user_friends}
+\item \url{user_hometown}
+\item \url{user_location}
+\item \url{user_religion_politics}
+\item \url{user_likes}
+\end{itemize}
 
 
 
@@ -514,9 +529,9 @@ To start modelling a graph database, it is useful to employ an Entity-Relationsh
 \item relationship -- from the verbs in the description
 \end{itemize}
 
-[TODO? przykład ER diagram, pokazanie że w GDB nie trzeba join tables? \cite{learning_neo4j}, pp. 77-79]
+% [TODO? przykład ER diagram, pokazanie że w GDB nie trzeba join tables? \cite{learning_neo4j}, pp. 77-79]
 
-[TODO? opisanie dobrych/złych praktyk modelowania? (\cite{learning_neo4j}, pp. 79-88)]
+% [TODO? opisanie dobrych/złych praktyk modelowania? (\cite{learning_neo4j}, pp. 79-88)]
 
 \subsection{Reco4Social model}
 
@@ -524,21 +539,31 @@ The data model implemented in the project is presented in Figure \ref{fig.data_m
 
 The node central to the model is the \texttt{User} node which can be related to almost all other nodes, including itself. The nodes \texttt{Gender}, \texttt{City}, \texttt{Religion}, \texttt{Political\-View} and \texttt{Page} represent user data gathered from his/her Facebook profile. As it can be seen, there are two relationships between \texttt{User} and \texttt{City}, which is perfectly acceptable in graph databases. The \texttt{KNOWS} relationship is self-referencing: it joins two nodes of the same type, in this case it shows that two users are friends on Facebook. Both \texttt{(User)-[LIKES]-(Page)} and \texttt{(User)-[KNOWS]-(User)} are one-to-many relations, while the rest of the above are (but do not have to be) one-to-one relations.
 
-In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship. 
+In the lower part of the schema there is the \texttt{Product} node. It belongs to a \texttt{Product\-Category} and can also be linked with a user, when he/she rates the product. The rating value is stored as a property of the \texttt{RATES} relationship.
 
-[TODO? coś jeszcze?]
+The Neo4j browser enables visual inspection of data. To illustrate it, Figure \ref{fig.graph_me} presents such output for all social data of a user in the database, whereas Figure \ref{fig.graph_common} shows all common nodes between two users.
 
-\hbox{}
-[TODO screen z odpalonego grafu w neo4j z jakimis danymi]
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{graph_me2.png} 
+\caption{Social profile of a user visualized in Neo4j.}
+\label{fig.graph_me}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{graph_common2.png} 
+\caption{All common nodes between two users in Neo4j.}
+\label{fig.graph_common}
+\end{figure}
+
 
 \section{Recommendation algorithm}
-
-% - niektórzy użytkownicy nie podali danych społ., albo zalogowali się, po czym zrezygnowali nie oceniwszy żadnego produktu -- należało takich użytkowników odfiltrować przed testami
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{recommendation_flow.png} 
-\caption[Recommendation flow.]{Recommendation flow. [TODO? Potencjalnie poprawić?]}
+\caption[Recommendation flow.]{Recommendation flow.}
 \label{fig.recommendation_flow}
 \end{figure}
 
@@ -578,12 +603,12 @@ Relationship         & Weight \vspace{2mm} \\ \hline
 \end{tabular}
 \end{table}
 
-The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{ARE\_FRIENDS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it can be multiplied. [TODO poprawić to, niezgrabne]
+The weights have been chosen arbitrarily, according to the author's subjective feel of importance of each parameter. For instance the relationship \texttt{ARE\_FRIENDS}, meaning the two users are friends on Facebook, seems the most important, hence a high weight. On the other hand there can be multiple Facebook pages common between two users, thus the \texttt{LIKES} weight is small, as it will be multiplied.
 
-To find the common relationships between the active user and others, the Cypher query presented in Listing \ref{listing.cypher_users_common} was used. The \texttt{\{active\-User\}} is replaced in the code with the appropriate \texttt{User} object. Because all user relationships in the data model, apart from \texttt{RATES}, represent his social profile, the query omits this one irrelevant relationship.
+To find the common relationships between the active user and others, the Cypher query presented in Listing \ref{listing.cypher_users_common} was used. The \texttt{\{active\-User\}} is replaced in the code with the appropriate \texttt{User} object. Because all user relationships in the data model, apart from \texttt{RATES}, represent his social profile, the query omits this one relationship, irrelevant to the process of user similarity calculation.
 
 \begin{listing}
-\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{plpgsql}
 MATCH (m:User)-[r1]-(k)-[r2]-(n:User)
 WHERE m={activeUser} AND NOT type(r1)="RATES" AND type(r1)=type(r2) 
 RETURN n.UID AS userId, type(r1) AS relType
@@ -595,7 +620,7 @@ RETURN n.UID AS userId, type(r1) AS relType
 In order to find all those that the active user is friends with, a different query is needed, presented in Listing \ref{listing.cypher_users_friends}. To differentiate between the situation where two users have common friends (\texttt{KNOWS}) the query will return a new, fake type of relationship -- \texttt{ARE\_FRIENDS} -- just for the purpose of user similarity evaluation.
 
 \begin{listing}
-\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{psql}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{plpgsql}
 MATCH (m:User)-[r]-(n:User)
 WHERE m={activeUser} AND type(r)="KNOWS"
 RETURN n.UID AS userId, "ARE_FRIENDS" AS relType
@@ -640,7 +665,7 @@ Finally, when all similarity values have been calculated, the users are sorted d
 
 Having the list of K similar users, for each one their highest rated products are chosen. The definition of what counts as "highly rated" is ambiguous, therefore a~variable \texttt{ratingLowest} has been introduced. As the name suggests, it defines a~threshold -- only products rated by a neighbour equally or higher will be considered for recommendation. The products selected from each neighbour are scanned and added to a global collection, each time preserving the rating and neighbour's similarity to the active user.
 
-Another filtering parameter is \texttt{minNumOfRatings}, which defines how many of the neighbours had to highly rate a product before it can be recommended. It has been introduced to enable control of suggesting unpopular items. 
+Another filtering parameter is \texttt{minNumOfRatings}, which defines the minimum number of neighbours who had to highly rate a product before it can be recommended. It has been introduced to enable control over suggestions of unpopular items. 
 
 Next, all remaining products are subjected to suggested rating computation. This is the system's evaluation of how it "thinks" the active user would rate these items. To account for neighbourhood similarity the RS calculates a weighted average of each product's ratings and corresponding user similarity values. The formula is presented in Equation \ref{eq.ratings_weighted}, with the $sim(u,u')$ representing the similarity value between the active user $u$ and a neighbour $u'$ belonging to the set of neighbours $U$, and the $r_{u'i}$ being the neighbour's rating of item $i$.
 
@@ -658,9 +683,26 @@ In the end the obtained predictions are rounded to integer values, sorted in a d
 
 
 \section{Product selection and user data gathering}
-The goal of the product catalog presented to the users was on the one hand to be diverse enough so that everyone could find something that suits them, but on the other hand to be concise enough so the data for the recommender system would not be too scarce.
+The goal of the product catalog presented to the users was on the one hand to be diverse enough so that everyone could find something that suits them, but on the other hand to be concise enough so the data for the recommender system would not be too sparse.
 
 To balance these two requirements the products could not have been obtained by simply crawling web stores with an automated program, but instead they had to be hand-picked. Most of the products come from Amazon, but also from other existing e-commerce websites. They have been divided in 15 categories, with around 20 products in each category. The obligatory information about each product includes the name and the URL of an image. In some cases other data has also been collected, such as description, price and the URL of the offer.
+
+The products were gathered in a spreadsheet, then exported to a CSV file and imported to Neo4j using the \texttt{LOAD CSV} function. Each category of products was imported separately. The full query is illustrated in Listing \ref{listing.load_csv}.
+
+
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{plpgsql}
+LOAD CSV WITH HEADERS FROM "file:///home/szymon/clothes.csv" AS c
+MERGE (category:ProductCategory { name: c.category })
+CREATE (product:Product { id: c.id, name_pl: c.name_pl, name_en: c.name_en, 
+    description_pl: c.description_pl, description_en: c.description_en, 
+    price_eur: toInt(c.price_eur), img_url: c.img_url, 
+    product_url: c.product_url})
+CREATE (product)-[:HAS_CATEGORY]->(category)
+\end{minted}
+\caption{Importing products into Neo4j.}
+\label{listing.load_csv}
+\end{listing}
 
 The test users for the application were recruited among my friends on Facebook. In the end 107 users have logged in to Reco4Social. Unfortunately some of them either blocked access to their social profile information or did not complete the survey. They had to filtered out in order not to obstruct the results. In the end the user base consisted of 90 users.
 
@@ -679,24 +721,24 @@ The web application consists of 3 main parts:
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\textwidth]{login_flow.png} 
-\caption[Login flow.]{Login flow [TODO poprawić ten schemat].}
+\caption[Login flow.]{Login flow.}
 \label{fig.login_flow}
 \end{figure}
 
-Upon entering the website, the user is presented with the login screen, shown in Figure \ref{fig.login}. The top panel contains two buttons: "About", which opens up a popup with additional information on the project, and "Report problem", which leads to a form created in Google Forms for submitting any issues with the application.
+The login flow schema is shown in Figure \ref{fig.login_flow}. Upon entering the website, the user is presented with the login screen, shown in Figure \ref{fig.login}. The top panel contains two buttons: "About", which opens up a popup with additional information on the project, and "Report problem", which leads to a form created in Google Forms for submitting any issues with the application.
 
-The central panel contains the login button for Facebook. When clicked, it uses the Facebook Javascript API to open a new window and guide the user through the Facebook authentication process. The user needs to authorize the Facebook application to access their data, as depicted in Figure \ref{fig.login.fb_app_auth}. Once that is completed, the window is closed and a callback to the original page is activated, informing about a successful login.
+The central panel contains the login button for Facebook. When clicked, it uses the Facebook Javascript API to open a new window and guide the user through the Facebook authentication process. The user needs to authorize the Facebook application for Reco4Social to be able to access their data, as depicted in Figure \ref{fig.login.fb_app_auth}. Once that is completed, the window is closed and a callback to the original page is activated, informing about a successful login.
 
 Depending on the stage of the project, the user is then redirected either to the survey or to the recommendation page. 
 
-\begin{figure}[!t]
+\begin{figure}
 \centering
 \includegraphics[width=\textwidth]{reco4_login.png} 
 \caption[Login page.]{Login page.}
 \label{fig.login}
 \end{figure}
 
-\begin{figure}[!t]
+\begin{figure}
 \centering
 \includegraphics[width=10cm]{fb_auth.png} 
 % width=7cm | \textwidth
@@ -715,9 +757,7 @@ In the background, a Spring component uses the user credentials to query Faceboo
 \item friends - only those who have also logged in to my website
 \end{itemize}
 
-If during the application authorization process the user edited the sharing options, some or all of the above data may not be accessible.
-
-The received information is processed in the background and stored in the graph database.
+If during the application authorization process the user edited the sharing options, some or all of the above data may not be accessible. The received information is processed in the background and stored in the graph database.
 
 \subsubsection{The survey}
 \begin{figure}[!t]
@@ -771,42 +811,19 @@ One of the design goals was to make the recommender seamlessly integrate with an
 
 With that in mind, the recommendations presentation was designed to be asynchronous. When the store's main page has loaded, an AJAX request is sent to the controller. It then repeatedly checks whether user data fetching has finished. When it is done the controller starts the RS and then sends its results back to the view (the web page). 
 
-[TODO może to trochę zmienimy, żeby to nie kontroler inicjował RS tylko jednak ten FBservice. W ten sposób rekomendacje nie będą "przekalkulowywane" ponownie przy każdym załadowaniu strony.]
+% [TODO może to trochę zmienimy, żeby to nie kontroler inicjował RS tylko jednak ten FBservice. W ten sposób rekomendacje nie będą "przekalkulowywane" ponownie przy każdym załadowaniu strony.]
 
 As soon as the AJAX request has been sent, the user is presented with a "Generating recommendations..." loading image. When the backend processing has finished and an AJAX response is received, the image is replaced with the generated recommendations. This process is illustrated in Figure \ref{fig.reco_gen_done}.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\textwidth]{reco_gen_done.png} 
-\caption[Recommendations generation.]{Recommendations generation. [TODO zmienić to? większy obrazek z lepszą rozdzielczością?]}
+\caption[Recommendations generation.]{Recommendations generation.}
 \label{fig.reco_gen_done}
 \end{figure}
 
 \hbox{}
 Thanks to this approach the RS processing does not slow down page loading and would not in any way hamper the user's experience with a real store. This is crucial nowadays, as page loading time is one of the key factors for users, which tend to abandon sites that load too slowly.
-
-\subsection{Facebook application configuration}
-The first step in using the Facebook API is application creation. User data can only be accessed when they grant the appropriate privileges to our application.
-
-The place for managing Facebook applications is the Developer center, available at the URL: \url{https://developers.facebook.com/}.
-
-To properly configure a new App, multiple details need to be provided, including the name, category, type (iOS, Android, web), its domain, website etc. Afterwards, two parameters are generated: App ID and App Secret, that allow client authorization.
-
-When new App is created, at first it possesses only the basic permissions for accessing users' data, namely the \url{public_profile}, \url{email} and \url{user_friends} items.
-
-In order to gain permissions for additional information, an approval submission needs to be filled in. Facebook expects detailed explanation, along with screenshots of the website, of how the obtained data will be used. At first my submission was rejected, however the second time, after having underlined that my project is not commercial, but purely academic, the permissions were granted.
-
-In the end the Facebook App has the following permissions that are used in the project:
-\begin{itemize}
-\item \url{public_profile}
-\item \url{user_friends}
-\item \url{user_hometown}
-\item \url{user_location}
-\item \url{user_religion_politics}
-\item \url{user_likes}
-\end{itemize}
-
-[TODO Graph API? Na jakie EP uderzamy? czy to dalej?]
 
 \subsection{Implementation}
 
@@ -857,7 +874,7 @@ Upon successful Facebook login the page form is submitted to the \texttt{Login\-
 \label{listing.controller_login_homesubmit}
 \end{listing}
 
-First, the \texttt{LoginController} class requires the Spring's \texttt{@Controller} annotation above the class name in order to be interpreted as a controller component. The particular method that handles the page submit also has an annotation: \texttt{@Request\-Mapping}. It maps a particular URL, defined as \texttt{value} attribute, to this method -- in this case it is the \texttt{/login} URL. Moreover, by defining the \texttt{method} attribute the scope of this method is limited to handle only POST requests.
+First, the \texttt{LoginController} class requires the Spring's \texttt{@Controller} annotation above the class name in order to be interpreted as a controller component. The method that handles the page submit also has an annotation: \texttt{@Request\-Mapping}. It maps a particular URL, defined as \texttt{value} attribute, to this method -- in this case it is the \texttt{/login} URL. Moreover, by defining the \texttt{method} attribute the scope of this method is limited to handle only POST requests.
 
 The method obtains a \texttt{User} object from the view, containing the \texttt{access\-Token} received from Facebook as a result of authentication. This token is then used each time when connecting to Facebook from the backend. In this case, with the use of RestFB, a lightweight Java library, a \texttt{Default\-Facebook\-Client} object is created. Next, it fetches the user's basic social profile data, available in the Facebook Graph API at the \texttt{/me} URL.
 
@@ -877,9 +894,36 @@ private GraphDBManager GDBM;
 \label{listing.autowiring}
 \end{listing}
 
-[TODO? opisać FacebookService?]
+The \texttt{FacebookService} queries the Facebook Graph API for additional user data by sending requests to to appropriate endpoints, e.g. \texttt{me/likes} for the list of likes or \texttt{me/friends} for the list of user friends. The downloaded data is then stored in Neo4j by the \texttt{GraphDBManager} object. Listing \ref{listing.create_node} shows the methods for creating nodes and relationships with the use of Neo4j Java libraries.
 
-[TODO opisać API Neo4j, jak uzytkownicy i relacje sa tworzone]
+\begin{listing}
+\begin{minted}[framesep=3mm,fontsize=\footnotesize,bgcolor=gray!20]{java}
+public Node createNode(Label label, String[][] parameters) {
+    try(Transaction tx = graphDb.beginTx()) {
+        Node node = graphDb.createNode(label);
+        for(String[] paramRow : parameters) {
+            node.setProperty(paramRow[0], paramRow[1]);
+        }
+        tx.success();
+        return node;
+    }
+}
+
+Relationship createRelationship(Node from, Node to, RelationshipType type){
+    try ( Transaction tx = graphDb.beginTx() ) {
+        Relationship relationship = from.createRelationshipTo(to, type);
+        tx.success();
+        return relationship;
+    }
+}
+\end{minted}
+\caption{Methods for creating nodes and relationships in Neo4j.}
+\label{listing.create_node}
+\end{listing}
+
+% [TODO? opisać FacebookService?]
+
+% [TODO opisać API Neo4j, jak uzytkownicy i relacje sa tworzone]
 
 \subsubsection{The survey}
 
@@ -892,7 +936,7 @@ When the user choice is submitted, the controller stores the selected categories
 \hbox{}
 Analogically, the survey page is administered by \texttt{survey\-.jsp} and \texttt{Survey\-Controller}. The products presentation has been implemented on the basis of an online e-commerce template \cite{bootply_ecommerce}. The "star" rating system was developed using the jQuery Raty plugin \cite{jquery_raty}. Each time a user rates a product, an AJAX POST request is sent to the controller and the rating is stored in the database. This feature has been implemented in order to avoid situations where the user would abandon the survey in the middle of a category and all his ratings for this category would be lost without the form submission.
 
-[TODO? coś jeszcze?]
+% [TODO? coś jeszcze?]
 
 \subsubsection{The recommender}
 
@@ -949,11 +993,11 @@ With that data the \texttt{ProductRecommender} component starts generating recom
 
 \chapter{Evaluation}\label{ch.evaluation} 
 
-[TODO jakiś wstęp]
+[TODO wstęp]
 
-- jak zostala zrobiona (idea, że offline, k-fold x-valid. etc.)
+% - jak zostala zrobiona (idea, że offline, k-fold x-valid. etc.)
 
-- że z ponad 100 userów zrobiło się 90 po odfiltrowaniu
+% - że z ponad 100 userów zrobiło się 90 po odfiltrowaniu
 
 \section{Evaluation of predictive and classification accuracy}
 
@@ -1022,40 +1066,248 @@ F_1 = 2\:\frac{Precision \times Recall}{Precision + Recall}
 
 \subsection{Results}
 
+The results of Reco4Social were compared against the popular method of dealing with cold-start in classic recommender systems, i.e. suggesting the most highly rated items overall -- it will be later referred to as "popularity". In the latter, the average rating of each product was calculated based on all of its ratings.
+
 The evaluation was performed by calculating RMSE, MAE, Precision, Recall and F-measure for each user in the database. This approach represents a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
 
-Moreover, this process was repeated for varying values of \texttt{K} and \texttt{minNumOf\-Ratings} -- both in the range from 1 to 10. The \texttt{ratingLowest} has been set to 4 as the threshold for relevancy.
+\subsubsection{Predictive analysis}
 
-The detailed test results can be found in Appendix 1 [TODO? tak, czy dać tylko tu wybrane i już?] and the selected best results are presented in Table \ref{table.results}.
+The results of the basic predictive analysis for the popularity approach are presented in Table \ref{table.pred.popularity1}. The results of an analogical test for Reco4Social are depicted in Table \ref{table.pred.reco1}. In this case, the values of K (number of closest neighbours taken into account for rating computation) were varied from 1 to 30.
 
 \begin{table}[!h]
 \centering
-\caption{Selected test results.}
-\label{table.results}
+\caption{Predictive, popularity approach.}
+\label{table.pred.popularity1}
 \vspace{3mm}
-\begin{tabular}{|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|}
 \hline
-K  & minNumOfRatings  & RMSE         & MAE          & Recall       & Precision    & F-measure     \\ \hline
-4  & 4  & {\bf 0.7842} & {\bf 0.6007} & 0.0736       & 0.3229       & 0.1087       \\ \hline
-6  & 5  & {\bf 0.7716} & {\bf 0.5911} & 0.0680       & 0.3535       & 0.1005       \\ \hline
-8  & 3  & 1.5215       & 1.1414       & 0.4704       & 0.2669       & {\bf 0.3068} \\ \hline
-10 & 1  & 1.8199       & 1.4280       & {\bf 0.9006} & 0.1617       & 0.2602       \\ \hline
-10 & 3  & 1.5696       & 1.1825       & 0.5568       & 0.2502       & {\bf 0.3165} \\ \hline
-10 & 6  & 1.0631       & 0.8216       & 0.1342       & {\bf 0.3564} & 0.1651       \\ \hline
+{\bf RMSE}   & {\bf MAE}    \\ \hline
+1.2262238053 & 1.0282292628 \\ \hline
 \end{tabular}
 \end{table}
 
-The general trend of how the parameters vary within a constant \texttt{K} and a changing \texttt{minNumOfRatings} is depicted in Figure \ref{fig.results_chart_k-8} for \texttt{K}=8.
-
-\begin{figure}[!h]
+\begin{table}[htpb]
 \centering
-\includegraphics[width=\textwidth]{results_chart_k-8.png} 
-\caption[Results for K=8.]{Results for K=8.}
-\label{fig.results_chart_k-8}
-\end{figure}
+\caption{Predictive, Reco4Social.}
+\label{table.pred.reco1}
+\vspace{3mm}
+\begin{tabular}{|l|l|l|}
+\hline
+{\bf K} & {\bf RMSE}   & {\bf MAE}    \\ \hline
+1       & 1.5305072122 & 1.1799575366 \\ \hline
+2       & 1.5124110094 & 1.1771485536 \\ \hline
+3       & 1.4850411033 & 1.170228851  \\ \hline
+4       & 1.4400158432 & 1.1467575007 \\ \hline
+5       & 1.4027322453 & 1.1206810835 \\ \hline
+6       & 1.3774724932 & 1.1071950591 \\ \hline
+7       & 1.3638592915 & 1.1020833402 \\ \hline
+8       & 1.3502205194 & 1.0943264798 \\ \hline
+9       & 1.3396093264 & 1.0877147083 \\ \hline
+…       & …            & …            \\ \hline
+26      & 1.271738203  & 1.0475353188 \\ \hline
+27      & 1.2691350867 & 1.0462928636 \\ \hline
+28      & 1.2666512473 & 1.0444721806 \\ \hline
+29      & 1.265059837  & 1.0437164602 \\ \hline
+30      & 1.2654664877 & 1.0444596275 \\ \hline
+...     & ...          & ...          \\ \hline
+50      & 1.2491689129 & 1.0385883716 \\ \hline
+...     & ...          & ...          \\ \hline
+70      & 1.2470079853 & 1.0387852877 \\ \hline
+\end{tabular}
+\end{table}
 
-\section{Evaluation of computation time and resource consumption}
+As it can be seen, the results of the popularity approach turned out to be better. Only in the case of very large values of K (> 50) the predictive accuracy of Reco4Social was comparable.
+
+In order to improve the performance of the social recommender system, the variations of additional parameter were introduced -- the \texttt{min\-Num\-Of\-Ratings}, which defined the minimum number of neighbours who had to rate a product before it was considered for recommendation (Table \ref{table.pred.reco2}). 
+
+It can be seen that for higher Ks, and for values of \texttt{min\-Num\-Of\-Ratings} close to the values of K, the error values of RMSE and MAE are lower than in the case of popularity approach. As it will be shown later, if the two parameters are too close to each other, it very negatively affects the classification accuracy. However, if balanced, the results can be better than in the popularity approach. 
+
+\begin{table}[htpb]
+\centering
+\caption{Predictive, Reco4Social, with \texttt{minNumOfRatings} parameter.}
+\label{table.pred.reco2}
+\vspace{3mm}
+\begin{tabular}{|l|l|l|l|}
+\hline
+{\bf K} & {\bf minNumOfRatings} & {\bf RMSE}         & {\bf MAE}          \\ \hline
+2       & 2                     & 1.3435671133       & 1.076345325        \\ \hline
+3       & 2                     & 1.3814965716       & 1.1095689874       \\ \hline
+3 & 3               & {\bf 1.2063608989} & {\bf 0.9837618611} \\ \hline
+4       & 2                     & 1.372775046        & 1.1087293628       \\ \hline
+4       & 3                     & 1.299312896        & 1.0500257346       \\ \hline
+4 & 4               & {\bf 1.008807547}  & {\bf 0.8306881431} \\ \hline
+5       & 2                     & 1.3545897657       & 1.0973765947       \\ \hline
+5       & 3                     & 1.3166894371       & 1.0708810368       \\ \hline
+5 & 4              & {\bf 1.1724907174} & {\bf 0.9546504622} \\ \hline
+5 & 5               & {\bf 0.7318218622} & {\bf 0.6141618686} \\ \hline
+...     & ...                   & ...                & ...                \\ \hline
+6 & 4               & {\bf 1.2157285714} & {\bf 0.9905567364} \\ \hline
+6 & 5              & {\bf 1.0288514698} & {\bf 0.8533111814} \\ \hline
+6 & 6              & {\bf 0.5282436629} & {\bf 0.4498951185} \\ \hline
+...     & ...                   & ...                & ...                \\ \hline
+7       & 4                     & 1.278536221        & 1.0474183191       \\ \hline
+7 & 5               & {\bf 1.1535328029} & {\bf 0.9405086913} \\ \hline
+7 & 6               & {\bf 0.8369121089} & {\bf 0.7041152913} \\ \hline
+7 & 7               & {\bf 0.3347235144} & {\bf 0.2897108282} \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Classification analysis}
+
+In the classification analysis it is important how many products are recommended. Therefore several amounts of recommended products will be considered: 10, 20 and 30 (more is usually never implemented in any RS). Moreover, we only want to suggest the relevant items, therefore a threshold for products selection (\texttt{ratingLowest}) was set to the value "4". The results for popularity are in Table \ref{table.clas.popularity1}, whereas those for Reco4Social in Table \ref{table.clas.reco1}.
+
+% \begin{table}[h]
+% \centering
+% \caption{Classification, popularity.}
+% \label{table.clas.popularity1}
+% \vspace{3mm}
+% \begin{tabular}{|l|l|l|}
+% \hline
+% {\bf Recall} & {\bf Precision} & {\bf F-measure} \\ \hline
+% 0.1052427836 & 0.3353535354    & 0.1445555053    \\ \hline
+% \end{tabular}
+% \end{table}
+
+\begin{table}[htpb]
+\centering
+\caption{Classification, popularity.}
+\label{table.clas.popularity1}
+\vspace{3mm}
+\begin{tabular}{lll}
+\hline
+\multicolumn{1}{|l|}{{\bf Recall 10}} & \multicolumn{1}{l|}{{\bf Precision 10}} & \multicolumn{1}{l|}{{\bf F-measure 10}} \\ \hline
+\multicolumn{1}{|l|}{0.10524}         & \multicolumn{1}{l|}{0.33535}            & \multicolumn{1}{l|}{0.14456}            \\ \hline
+                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf Recall 20}} & \multicolumn{1}{l|}{{\bf Precision 20}} & \multicolumn{1}{l|}{{\bf F-measure 20}} \\ \hline
+\multicolumn{1}{|l|}{0.17118}         & \multicolumn{1}{l|}{0.30265}            & \multicolumn{1}{l|}{0.19781}            \\ \hline
+                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf Recall 30}} & \multicolumn{1}{l|}{{\bf Precision 30}} & \multicolumn{1}{l|}{{\bf F-measure 30}} \\ \hline
+\multicolumn{1}{|l|}{0.23744}         & \multicolumn{1}{l|}{0.28208}            & \multicolumn{1}{l|}{0.23155}            \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[htpb]
+\centering
+\caption{Classification, Reco4Social.}
+\label{table.clas.reco1}
+\vspace{3mm}
+\begin{tabular}{llll}
+\hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf Recall 10}} & \multicolumn{1}{l|}{{\bf Precision 10}} & \multicolumn{1}{l|}{{\bf F-measure 10}} \\ \hline
+\multicolumn{1}{|l|}{1}       & \multicolumn{1}{l|}{0.088062}        & \multicolumn{1}{l|}{0.293939}           & \multicolumn{1}{l|}{0.127452}           \\ \hline
+\multicolumn{1}{|l|}{2}       & \multicolumn{1}{l|}{0.069647}        & \multicolumn{1}{l|}{0.239394}           & \multicolumn{1}{l|}{0.101032}           \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{0.059642}        & \multicolumn{1}{l|}{0.207071}           & \multicolumn{1}{l|}{0.086471}           \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{0.053970}        & \multicolumn{1}{l|}{0.186869}           & \multicolumn{1}{l|}{0.077653}           \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{0.052297}        & \multicolumn{1}{l|}{0.175758}           & \multicolumn{1}{l|}{0.074462}           \\ \hline
+                              &                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf Recall 20}} & \multicolumn{1}{l|}{{\bf Precision 20}} & \multicolumn{1}{l|}{{\bf F-measure 20}} \\ \hline
+\multicolumn{1}{|l|}{1}       & \multicolumn{1}{l|}{0.150975}        & \multicolumn{1}{l|}{0.267196}           & \multicolumn{1}{l|}{0.175994}           \\ \hline
+\multicolumn{1}{|l|}{2}       & \multicolumn{1}{l|}{0.121690}        & \multicolumn{1}{l|}{0.228042}           & \multicolumn{1}{l|}{0.146090}           \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{0.116924}        & \multicolumn{1}{l|}{0.215873}           & \multicolumn{1}{l|}{0.140277}           \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{0.112357}        & \multicolumn{1}{l|}{0.202646}           & \multicolumn{1}{l|}{0.133216}           \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{0.105453}        & \multicolumn{1}{l|}{0.194709}           & \multicolumn{1}{l|}{0.125955}           \\ \hline
+                              &                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf Recall 30}} & \multicolumn{1}{l|}{{\bf Precision 30}} & \multicolumn{1}{l|}{{\bf F-measure 30}} \\ \hline
+\multicolumn{1}{|l|}{1}       & \multicolumn{1}{l|}{0.211712}        & \multicolumn{1}{l|}{0.250179}           & \multicolumn{1}{l|}{0.205663}           \\ \hline
+\multicolumn{1}{|l|}{2}       & \multicolumn{1}{l|}{0.187304}        & \multicolumn{1}{l|}{0.221864}           & \multicolumn{1}{l|}{0.181451}           \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{0.173501}        & \multicolumn{1}{l|}{0.211828}           & \multicolumn{1}{l|}{0.172185}           \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{0.165133}        & \multicolumn{1}{l|}{0.199283}           & \multicolumn{1}{l|}{0.163490}           \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{0.149566}        & \multicolumn{1}{l|}{0.184229}           & \multicolumn{1}{l|}{0.149599}           \\ \hline
+\end{tabular}
+\end{table}
+
+The test shows that for K=1 the Reco4Social results are slightly lower than those of popularity approach, yet they are at least comparable. For higher values of K, though, they are visibly worse.
+
+In the second examination, the \texttt{min\-Num\-Of\-Ratings} was again introduced. Fragments of the outcome are illustrated in Table \ref{table.clas.reco2}. Because of the abundance of results, only those that were better for Reco4Social were selected (in terms of F-measure).
+
+As illustrated by the results, by manipulating the \texttt{min\-Num\-Of\-Ratings} parameter in some cases it was possible to obtain better F-measure results for Reco4Social than for the popularity approach.
+
+\subsubsection{Results summary}
+
+
+\begin{table}[htpb]
+\centering
+\caption{Classification, Reco4Social, with \texttt{minNumOfRatings} parameter.}
+\label{table.clas.reco2}
+\vspace{3mm}
+\begin{tabular}{lllll}
+\hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf minNumOfRatings}} & \multicolumn{1}{l|}{{\bf Recall 10}} & \multicolumn{1}{l|}{{\bf Precision 10}} & \multicolumn{1}{l|}{{\bf F-measure 10}} \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.10926}         & \multicolumn{1}{l|}{0.33744}            & \multicolumn{1}{l|}{{\bf 0.14614}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.11058}         & \multicolumn{1}{l|}{0.34081}            & \multicolumn{1}{l|}{{\bf 0.14926}}      \\ \hline
+\multicolumn{1}{|l|}{6}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.10627}         & \multicolumn{1}{l|}{0.36062}            & \multicolumn{1}{l|}{{\bf 0.14874}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.11007}         & \multicolumn{1}{l|}{0.35101}            & \multicolumn{1}{l|}{{\bf 0.15163}}      \\ \hline
+\multicolumn{1}{|l|}{9}       & \multicolumn{1}{l|}{5}                        & \multicolumn{1}{l|}{0.11263}         & \multicolumn{1}{l|}{0.36095}            & \multicolumn{1}{l|}{{\bf 0.15547}}      \\ \hline
+\multicolumn{1}{|l|}{10}      & \multicolumn{1}{l|}{5}                        & \multicolumn{1}{l|}{0.11417}         & \multicolumn{1}{l|}{0.35960}            & \multicolumn{1}{l|}{{\bf 0.15713}}      \\ \hline
+                              &                                               &                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf minNumOfRatings}} & \multicolumn{1}{l|}{{\bf Recall 20}} & \multicolumn{1}{l|}{{\bf Precision 20}} & \multicolumn{1}{l|}{{\bf F-measure 20}} \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{2}                        & \multicolumn{1}{l|}{0.18012}         & \multicolumn{1}{l|}{0.30148}            & \multicolumn{1}{l|}{{\bf 0.20133}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.18758}         & \multicolumn{1}{l|}{0.32467}            & \multicolumn{1}{l|}{{\bf 0.21230}}      \\ \hline
+\multicolumn{1}{|l|}{6}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.17651}         & \multicolumn{1}{l|}{0.30899}            & \multicolumn{1}{l|}{{\bf 0.20167}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.17768}         & \multicolumn{1}{l|}{0.30635}            & \multicolumn{1}{l|}{{\bf 0.20212}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.17236}         & \multicolumn{1}{l|}{0.32524}            & \multicolumn{1}{l|}{{\bf 0.20269}}      \\ \hline
+\multicolumn{1}{|l|}{8}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.18271}         & \multicolumn{1}{l|}{0.32105}            & \multicolumn{1}{l|}{{\bf 0.21138}}      \\ \hline
+\multicolumn{1}{|l|}{9}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.18869}         & \multicolumn{1}{l|}{0.32698}            & \multicolumn{1}{l|}{{\bf 0.21762}}      \\ \hline
+\multicolumn{1}{|l|}{12}      & \multicolumn{1}{l|}{5}                        & \multicolumn{1}{l|}{0.19021}         & \multicolumn{1}{l|}{0.32793}            & \multicolumn{1}{l|}{{\bf 0.21873}}      \\ \hline
+                              &                                               &                                      &                                         &                                         \\ \hline
+\multicolumn{1}{|l|}{{\bf K}} & \multicolumn{1}{l|}{{\bf minNumOfRatings}} & \multicolumn{1}{l|}{{\bf Recall 30}} & \multicolumn{1}{l|}{{\bf Precision 30}} & \multicolumn{1}{l|}{{\bf F-measure 30}} \\ \hline
+\multicolumn{1}{|l|}{3}       & \multicolumn{1}{l|}{2}                        & \multicolumn{1}{l|}{0.24419}         & \multicolumn{1}{l|}{0.29049}            & \multicolumn{1}{l|}{{\bf 0.23717}}      \\ \hline
+\multicolumn{1}{|l|}{4}       & \multicolumn{1}{l|}{2}                        & \multicolumn{1}{l|}{0.24734}         & \multicolumn{1}{l|}{0.29140}            & \multicolumn{1}{l|}{{\bf 0.24060}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{2}                        & \multicolumn{1}{l|}{0.24431}         & \multicolumn{1}{l|}{0.28315}            & \multicolumn{1}{l|}{{\bf 0.23605}}      \\ \hline
+\multicolumn{1}{|l|}{5}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.24305}         & \multicolumn{1}{l|}{0.31837}            & \multicolumn{1}{l|}{{\bf 0.24683}}      \\ \hline
+\multicolumn{1}{|l|}{6}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.25241}         & \multicolumn{1}{l|}{0.30503}            & \multicolumn{1}{l|}{{\bf 0.24913}}      \\ \hline
+\multicolumn{1}{|l|}{7}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.25267}         & \multicolumn{1}{l|}{0.29919}            & \multicolumn{1}{l|}{{\bf 0.24757}}      \\ \hline
+\multicolumn{1}{|l|}{8}       & \multicolumn{1}{l|}{3}                        & \multicolumn{1}{l|}{0.24945}         & \multicolumn{1}{l|}{0.29120}            & \multicolumn{1}{l|}{{\bf 0.24317}}      \\ \hline
+\multicolumn{1}{|l|}{8}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.24098}         & \multicolumn{1}{l|}{0.31595}            & \multicolumn{1}{l|}{{\bf 0.24769}}      \\ \hline
+\multicolumn{1}{|l|}{9}       & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.26004}         & \multicolumn{1}{l|}{0.32045}            & \multicolumn{1}{l|}{{\bf 0.26224}}      \\ \hline
+\multicolumn{1}{|l|}{10}      & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.26148}         & \multicolumn{1}{l|}{0.31387}            & \multicolumn{1}{l|}{{\bf 0.26002}}      \\ \hline
+\multicolumn{1}{|l|}{11}      & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.25360}         & \multicolumn{1}{l|}{0.30751}            & \multicolumn{1}{l|}{{\bf 0.25350}}      \\ \hline
+\multicolumn{1}{|l|}{11}      & \multicolumn{1}{l|}{5}                        & \multicolumn{1}{l|}{0.24054}         & \multicolumn{1}{l|}{0.31984}            & \multicolumn{1}{l|}{{\bf 0.24765}}      \\ \hline
+\multicolumn{1}{|l|}{12}      & \multicolumn{1}{l|}{4}                        & \multicolumn{1}{l|}{0.25179}         & \multicolumn{1}{l|}{0.30036}            & \multicolumn{1}{l|}{{\bf 0.24936}}      \\ \hline
+\multicolumn{1}{|l|}{12}      & \multicolumn{1}{l|}{5}                        & \multicolumn{1}{l|}{0.25445}         & \multicolumn{1}{l|}{0.31762}            & \multicolumn{1}{l|}{{\bf 0.25703}}      \\ \hline
+\end{tabular}
+\end{table}
+
+
+% The evaluation was performed by calculating RMSE, MAE, Precision, Recall and F-measure for each user in the database. This approach represents a K-fold cross validation with the active user as a one-element \textit{validation set} and all other users as the \textit{training set}.
+
+% Moreover, this process was repeated for varying values of \texttt{K} and \texttt{minNumOf\-Ratings} -- both in the range from 1 to 10. The \texttt{ratingLowest} has been set to 4 as the threshold for relevancy.
+
+% The detailed test results can be found in Appendix 1 [TODO? tak, czy dać tylko tu wybrane i już?] and the selected best results are presented in Table \ref{table.results}.
+
+% \begin{table}[!h]
+% \centering
+% \caption{Selected test results.}
+% \label{table.results}
+% \vspace{3mm}
+% \begin{tabular}{|l|l|l|l|l|l|l|}
+% \hline
+% K  & minNumOfRatings  & RMSE         & MAE          & Recall       & Precision    & F-measure     \\ \hline
+% 4  & 4  & {\bf 0.7842} & {\bf 0.6007} & 0.0736       & 0.3229       & 0.1087       \\ \hline
+% 6  & 5  & {\bf 0.7716} & {\bf 0.5911} & 0.0680       & 0.3535       & 0.1005       \\ \hline
+% 8  & 3  & 1.5215       & 1.1414       & 0.4704       & 0.2669       & {\bf 0.3068} \\ \hline
+% 10 & 1  & 1.8199       & 1.4280       & {\bf 0.9006} & 0.1617       & 0.2602       \\ \hline
+% 10 & 3  & 1.5696       & 1.1825       & 0.5568       & 0.2502       & {\bf 0.3165} \\ \hline
+% 10 & 6  & 1.0631       & 0.8216       & 0.1342       & {\bf 0.3564} & 0.1651       \\ \hline
+% \end{tabular}
+% \end{table}
+
+% The general trend of how the parameters vary within a constant \texttt{K} and a changing \texttt{minNumOfRatings} is depicted in Figure \ref{fig.results_chart_k-8} for \texttt{K}=8.
+
+% \begin{figure}[!h]
+% \centering
+% \includegraphics[width=\textwidth]{results_chart_k-8.png} 
+% \caption[Results for K=8.]{Results for K=8.}
+% \label{fig.results_chart_k-8}
+% \end{figure}
+
+% \section{Evaluation of computation time and resource consumption}
 \section{Comparison to non-social recommender systems}
+
+[TODO opis słowny]
 
 \chapter{Summary and conclusions}
 \label{ch.summary}
@@ -1063,14 +1315,17 @@ The general trend of how the parameters vary within a constant \texttt{K} and a 
 \section{Usability of the project in AMG.net/Atos}
 \section{Future development perspectives}
 
-- większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
+% - większy zbiór użytkowników i produktów --> dłuższe wyliczanie rekomendacji. może jakieś optymalizacje?\\
 
-- przechowywanie raz wyliczonych rekomendacji w bazie, jakies batch-owe przeliczanie
+% - przechowywanie raz wyliczonych rekomendacji w bazie, jakies batch-owe przeliczanie
 
-- podpięcie do klasycznego CF
--- wpływ innych czynników na rozwój rekomendacji: interakcja ze stroną, przeglądanie produktów etc.
+% - podpięcie do klasycznego CF
+% -- wpływ innych czynników na rozwój rekomendacji: interakcja ze stroną, przeglądanie produktów etc.
 
-- avoid supernodes (the dense node pattern, \cite{learning_neo4j}, pp. 88-89)
+% - avoid supernodes (the dense node pattern, \cite{learning_neo4j}, pp. 88-89)
+
+
+
 
 % \chapter{Bibliography}
 
