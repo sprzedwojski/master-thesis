@@ -1389,7 +1389,13 @@ Finally, this chapter completes the objectives with the analysis of the potentia
 
 \section{Conclusions}
 
+The created social recommender system presented promising results, however they did not entirely meet the initial expectations. In the current implementation it was possible to obtain better results than in the case of recommending the top rated products, however it was always a trade-off between predictive and classification accuracy. There may exist a more optimal combination of parameters for both user similarity calculation (relationship weights) and product recommending (K, lowest rating, minimum number of user ratings) yielding better results. A potential way of finding the best values of these parameters might be by using a genetic algorithm.
 
+Moreover, the reason why the popularity approach to recommendations worked so well in this case might have been the homogeneity and small size of the test user base. These were mostly young Polish people in their twenties from big cities, therefore or all of them were more or less similar. As a result, if in tests the most popular products were suggested to a user, there was a high chance that they would fit well in the interests of the user. In order to properly measure the differences in performance between the two approaches a larger and more diverse user base would be necessary.
+
+The use of a graph database has proven a good choice as it modelled social interactions very well, enabled easy data design changes during development without a fixed, rigid schema and allowed for fast recommendation generation due to its optimisation for complex queries of interconnected data.
+
+In conclusion, the proposed new way of creating recommender systems with the social media information as the driving force behind recommendations shows promise, but needs more research and testing before being ready for commercial applications.
 
 \section{Future development perspectives}
 
